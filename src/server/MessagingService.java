@@ -1,6 +1,6 @@
 package server;
 
-import logging.Logger;
+import server.logging.Logger;
 
 import java.io.IOException;
 import java.net.ServerSocket;

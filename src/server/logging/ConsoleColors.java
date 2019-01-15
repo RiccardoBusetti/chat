@@ -1,7 +1,7 @@
-package logging;
+package server.logging;
 
 /**
- * Class containing constants used to color the messages inside of the terminal.
+ * Class containing server.constants used to color the messages inside of the terminal.
  */
 public class ConsoleColors {
     // Reset

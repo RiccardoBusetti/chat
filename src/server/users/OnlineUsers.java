@@ -1,50 +1,42 @@
 package server.users;
 
-import data.entities.OnlineUser;
-import data.entities.User;
-import exceptions.UserNotFoundException;
-import logging.Logger;
+import javafx.util.Pair;
+import server.entities.User;
+import server.exceptions.UserNotFoundException;
+import server.logging.Logger;
 
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class implementing {@link Users} behavior with the use of
- * {@link User} and {@link Socket}.
+ * Class responsible of managing the online users of the chat.
  */
 public class OnlineUsers implements Users<User, Socket> {
 
     private static OnlineUsers instance;
 
-    private List<OnlineUser<User, Socket>> onlineUsers;
+    private List<Pair<User, Socket>> onlineUsers;
 
     private OnlineUsers() {
         onlineUsers = new ArrayList<>();
     }
 
     public static OnlineUsers getInstance() {
-        if (instance != null) instance = new OnlineUsers();
+        if (instance == null) instance = new OnlineUsers();
 
         return instance;
     }
 
     @Override
-    public void userConnected(User user, Socket clientSocket) {
-        onlineUsers.add(new OnlineUser<>(user, clientSocket));
+    public synchronized void addUser(User user, Socket information) {
+        onlineUsers.add(new Pair<>(user, information));
 
         Logger.logConnection(this, "User " + user.getUsername() + " connected!");
     }
 
     @Override
-    public void userConnected(OnlineUser<User, Socket> onlineUser) {
-        onlineUsers.add(onlineUser);
-
-        Logger.logConnection(this, "User " + onlineUser.getUser().getUsername() + " connected!");
-    }
-
-    @Override
-    public void userDisconnected(String username) {
+    public synchronized void removeUser(String username) {
         try {
             onlineUsers.remove(searchUserByUsername(username));
 
@@ -55,27 +47,27 @@ public class OnlineUsers implements Users<User, Socket> {
     }
 
     @Override
-    public void disconnectAllUsers() {
+    public synchronized void removeAllUsers() {
         onlineUsers.clear();
     }
 
     @Override
-    public OnlineUser<User, Socket> getUserByUsername(String username) throws UserNotFoundException {
+    public synchronized Pair<User, Socket> getUserByUsername(String username) throws UserNotFoundException {
         return searchUserByUsername(username);
     }
 
     @Override
-    public List<OnlineUser<User, Socket>> getAllUsers() {
+    public synchronized List<Pair<User, Socket>> getAllUsers() {
         return onlineUsers;
     }
 
-    private OnlineUser<User, Socket> searchUserByUsername(String username) throws UserNotFoundException {
+    private Pair<User, Socket> searchUserByUsername(String username) throws UserNotFoundException {
         int counter = 0;
 
         while (counter < onlineUsers.size()) {
-            OnlineUser<User, Socket> onlineUser = onlineUsers.get(counter);
+            Pair<User, Socket> onlineUser = onlineUsers.get(counter);
 
-            if (onlineUser.getUser().getUsername().equals(username))
+            if (onlineUser.getKey().getUsername().equals(username))
                 return onlineUser;
 
             counter++;

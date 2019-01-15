@@ -1,26 +1,25 @@
 package server.users;
 
-import data.entities.OnlineUser;
-import exceptions.UserNotFoundException;
+import javafx.util.Pair;
+import server.exceptions.UserNotFoundException;
 
 import java.util.List;
 
 /**
  * Interface representing the way we treat users generically inside
  * of the chat, independently from the implementation.
+ *
  * @param <U> user POJO
- * @param <C> client Object
+ * @param <I> used to store additional user information
  */
-public interface Users<U, C> {
-    void userConnected(U user, C clientSocket);
+public interface Users<U, I> {
+    void addUser(U user, I information);
 
-    void userConnected(OnlineUser<U, C> onlineUser);
+    void removeUser(String username);
 
-    void userDisconnected(String username);
+    void removeAllUsers();
 
-    void disconnectAllUsers();
+    Pair<U, I> getUserByUsername(String username) throws UserNotFoundException;
 
-    OnlineUser<U, C> getUserByUsername(String username) throws UserNotFoundException;
-
-    List<OnlineUser<U, C>> getAllUsers();
+    List<Pair<U, I>> getAllUsers();
 }

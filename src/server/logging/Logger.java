@@ -1,7 +1,7 @@
-package logging;
+package server.logging;
 
 /**
- * Class responsible of providing custom logging for the server.
+ * Class responsible of providing custom server.logging for the server.
  */
 public class Logger {
 

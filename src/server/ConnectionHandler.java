@@ -1,9 +1,8 @@
 package server;
 
-import constants.Constants;
-import data.entities.OnlineUser;
-import data.entities.User;
-import logging.Logger;
+import server.constants.Constants;
+import server.entities.User;
+import server.logging.Logger;
 import server.users.OnlineUsers;
 
 import java.io.BufferedReader;
@@ -17,10 +16,14 @@ import java.net.Socket;
  * in order to allow for multiple connections.
  */
 public class ConnectionHandler implements Runnable {
+
+    private User user;
+    private Socket clientSocket;
     private OnlineUser<User, Socket> onlineUser;
 
     public ConnectionHandler(Socket clientSocket) {
-        this.onlineUser = new OnlineUser<>(new User(clientSocket.getInetAddress().getHostName(), Constants.PASSWORD_NOT_AVAILABLE), clientSocket);
+        this.user = new User(clientSocket.getInetAddress().getHostName(), Constants.PASSWORD_NOT_AVAILABLE);
+        this.clientSocket = clientSocket;
     }
 
     @Override
@@ -39,7 +42,7 @@ public class ConnectionHandler implements Runnable {
     }
 
     private void listen() throws IOException {
-        OnlineUsers.getInstance().userConnected(onlineUser);
+        OnlineUsers.getInstance().addUser(user, clientSocket);
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(onlineUser.getClient().getInputStream()));
         PrintWriter printWriter = new PrintWriter(onlineUser.getClient().getOutputStream(), true);

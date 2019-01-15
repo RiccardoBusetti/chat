@@ -1,6 +1,6 @@
 import server.MessagingService;
 
-public class MainCLI {
+public class ServerTest {
 
     public static void main(String[] args) {
         new MessagingService.Builder()

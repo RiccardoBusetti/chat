@@ -1,4 +1,4 @@
-package data.entities;
+package server.entities;
 
 /**
  * POJO that represents the user inside of the chat.
