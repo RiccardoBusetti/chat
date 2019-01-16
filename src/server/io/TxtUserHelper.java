@@ -31,5 +31,4 @@ public class TxtUserHelper {
     private static String[] decodeString(String string) {
         return string.contains(Constants.COMMA_SEPARATOR) ? string.split(Constants.COMMA_SEPARATOR) : new String[3];
     }
-
 }

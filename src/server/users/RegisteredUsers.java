@@ -19,7 +19,6 @@ import java.util.List;
  * the user.
  */
 public class RegisteredUsers implements Users<User, Boolean> {
-
     @Override
     public void addUser(User user, Boolean information) {
 

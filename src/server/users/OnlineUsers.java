@@ -13,7 +13,6 @@ import java.util.List;
  * Class responsible of managing the online users of the chat.
  */
 public class OnlineUsers implements Users<User, Socket> {
-
     private static OnlineUsers instance;
 
     private List<Pair<User, Socket>> onlineUsers;

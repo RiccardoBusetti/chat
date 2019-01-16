@@ -40,7 +40,6 @@ public class MessagingService {
     }
 
     public static class Builder {
-
         private int port;
 
         public Builder onPort(int port) {
@@ -52,6 +51,5 @@ public class MessagingService {
         public MessagingService build() {
             return new MessagingService(this.port);
         }
-
     }
 }

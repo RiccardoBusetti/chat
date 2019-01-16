@@ -19,7 +19,6 @@ public class ConnectionHandler implements Runnable {
 
     private User user;
     private Socket clientSocket;
-    private OnlineUser<User, Socket> onlineUser;
 
     public ConnectionHandler(Socket clientSocket) {
         this.user = new User(clientSocket.getInetAddress().getHostName(), Constants.PASSWORD_NOT_AVAILABLE);
@@ -33,7 +32,7 @@ public class ConnectionHandler implements Runnable {
 
     private void handleConnection() {
         try {
-            Logger.logConnection(this, "Handling connection with the client " + onlineUser.getClient().getRemoteSocketAddress());
+            Logger.logConnection(this, "Handling connection with the client " + clientSocket.getRemoteSocketAddress());
 
             listen();
         } catch (IOException e) {
@@ -44,8 +43,8 @@ public class ConnectionHandler implements Runnable {
     private void listen() throws IOException {
         OnlineUsers.getInstance().addUser(user, clientSocket);
 
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(onlineUser.getClient().getInputStream()));
-        PrintWriter printWriter = new PrintWriter(onlineUser.getClient().getOutputStream(), true);
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
     }
 
     private void handleLogin() {
