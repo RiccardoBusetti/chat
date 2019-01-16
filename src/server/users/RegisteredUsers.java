@@ -7,6 +7,7 @@ import server.exceptions.UserNotFoundException;
 import server.io.TxtFilesHelper;
 import server.io.TxtUserHelper;
 
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,22 +22,23 @@ import java.util.List;
 public class RegisteredUsers implements Users<User, Boolean> {
     @Override
     public void addUser(User user, Boolean information) {
-
+        String encodedUser = TxtUserHelper.encodeUser(user, information);
+        TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, encodedUser);
     }
 
     @Override
     public void removeUser(String username) {
-
+        // TODO: implement removal by wiping the txt file and rewriting everything
     }
 
     @Override
     public void removeAllUsers() {
-
+        TxtFilesHelper.clear(Constants.REGISTERED_USERS_FILE_NAME);
     }
 
     @Override
     public Pair<User, Boolean> getUserByUsername(String username) throws UserNotFoundException {
-        return null;
+        return searchUserByUsername(username);
     }
 
     @Override
@@ -48,5 +50,21 @@ public class RegisteredUsers implements Users<User, Boolean> {
         }
 
         return users;
+    }
+
+    private Pair<User, Boolean> searchUserByUsername(String username) throws UserNotFoundException {
+        List<String> registeredUsers = TxtFilesHelper.getAllLines(Constants.REGISTERED_USERS_FILE_NAME);
+        int counter = 0;
+
+        while (counter < registeredUsers.size()) {
+            Pair<User, Boolean> registeredUser = TxtUserHelper.decodeUser(registeredUsers.get(counter));
+
+            if (registeredUser.getKey().getUsername().equals(username))
+                return registeredUser;
+
+            counter++;
+        }
+
+        throw new UserNotFoundException();
     }
 }

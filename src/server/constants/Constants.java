@@ -10,6 +10,6 @@ public class Constants {
     public static final String BASE_DIR = "/Users/riccardobusetti/Desktop/Chat/";
     public static final String TXT_EXTENSION = ".txt";
     public static final String COMMA_SEPARATOR = ",";
-
     public static final String REGISTERED_USERS_FILE_NAME = "registered_users";
+    public static final String EMPTY_FILE = "";
 }

@@ -31,6 +31,22 @@ public class TxtFilesHelper {
         printWriter.close();
     }
 
+    public static void clear(String fileName) {
+        try {
+            clearOnFile(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void clearOnFile(String fileName) throws IOException {
+        File file = new File(Constants.BASE_DIR + fileName + Constants.TXT_EXTENSION);
+        PrintWriter printWriter = new PrintWriter(new FileOutputStream(file, true));
+
+        printWriter.print(Constants.EMPTY_FILE);
+        printWriter.close();
+    }
+
     public static List<String> getAllLines(String fileName) {
         try {
             return getAllLinesOnFile(fileName);
