@@ -66,8 +66,9 @@ public class OnlineUsers implements Users<User, Socket> {
         while (counter < onlineUsers.size()) {
             Pair<User, Socket> onlineUser = onlineUsers.get(counter);
 
-            if (onlineUser.getKey().getUsername().equals(username))
+            if (onlineUser.getKey().getUsername().equals(username)) {
                 return onlineUser;
+            }
 
             counter++;
         }
