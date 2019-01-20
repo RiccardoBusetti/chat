@@ -11,9 +11,7 @@ import java.util.List;
  * @param <I> used to store additional user information
  */
 public interface UsersObserver<U, I> {
-
     void onUserAdded(List<Pair<U, I>> users);
 
     void onUserModified(List<Pair<U, I>> users);
-
 }

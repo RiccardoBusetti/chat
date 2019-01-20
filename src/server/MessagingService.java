@@ -28,7 +28,7 @@ public class MessagingService {
 
     private void startService() {
         try {
-            Logger.logStatus(this, "Server starting on port " + port);
+            Logger.logStatus(this, "Server starting on port " + port + ".");
 
             listen();
         } catch (IOException e) {
@@ -40,7 +40,7 @@ public class MessagingService {
         serverSocket = new ServerSocket(port);
 
         while (true) {
-            Logger.logStatus(this, "Server waiting for new connection on port " + port);
+            Logger.logStatus(this, "Server waiting for new connection on port " + port + ".");
 
             ConnectionHandler connectionHandler = new ConnectionHandler(serverSocket.accept());
 

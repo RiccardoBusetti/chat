@@ -27,30 +27,20 @@ public class ServerTest extends Application implements UsersObserver<User, Boole
         primaryStage.setTitle("Chat server");
 
         statusText = new Text();
-
-        //Setting the text to be added.
         statusText.setText("Launching server");
-
-        //setting the position of the text
         statusText.setX(50);
         statusText.setY(50);
-
-        new MessagingService.Builder()
-                .onPort(8888)
-                .async()
-                .build()
-                .start();
 
         StackPane root = new StackPane();
         root.getChildren().add(statusText);
         primaryStage.setScene(new Scene(root, 300, 250));
         primaryStage.show();
 
-        RegisteredUsers users = RegisteredUsers.getInstance();
-        users.observe(this);
-        users.addUser(new User("riccardo", "5mgfk"), false);
-        users.addUser(new User("paola", "whfej"), false);
-        users.blockUser("riccardo");
+        new MessagingService.Builder()
+                .onPort(8888)
+                .async()
+                .build()
+                .start();
     }
 
     @Override

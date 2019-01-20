@@ -9,6 +9,7 @@ import server.io.TxtUserHelper;
 import server.logging.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -22,6 +23,10 @@ import java.util.List;
 public class RegisteredUsers extends ServiceUsers<User, Boolean> {
     private static RegisteredUsers instance;
 
+    private RegisteredUsers() {
+
+    }
+
     public static RegisteredUsers getInstance() {
         if (instance == null) instance = new RegisteredUsers();
 
@@ -29,51 +34,69 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
     }
 
     @Override
-    public void addUser(User user, Boolean information) {
+    public synchronized void addUser(User user, Boolean information) {
         String encodedUser = TxtUserHelper.encodeUser(user, information);
         TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, encodedUser);
 
         if (isObserverAttached()) usersObserver.onUserAdded(getAllUsers());
+
+        Logger.logRegistration(this, "User " + user.getUsername() + " registered.");
     }
 
     @Override
-    public void removeUser(String username) {
+    public synchronized void removeUser(String username) {
         try {
             removeUserAndRewriteFile(username);
 
             if (isObserverAttached()) usersObserver.onUserModified(getAllUsers());
+
+            Logger.logRegistration(this, "User " + username + " removed.");
         } catch (UserNotFoundException exc) {
             Logger.logError(this, exc.getMessage());
         }
     }
 
-    public void blockUser(String username) {
+    public synchronized void blockUser(String username) {
         try {
             blockUserAndRewriteFile(username);
 
             if (isObserverAttached()) usersObserver.onUserModified(getAllUsers());
+
+            Logger.logRegistration(this, "User " + username + " blocked.");
         } catch (UserNotFoundException exc) {
             Logger.logError(this, exc.getMessage());
         }
     }
 
+    public synchronized boolean login(String username, String password) {
+        try {
+            Pair<User, Boolean> foundUser = searchUser(username);
+
+            return foundUser.getKey().getPassword().equals(password) && !foundUser.getValue();
+        } catch (UserNotFoundException exc) {
+            Logger.logError(this, exc.getMessage());
+        }
+
+        return false;
+    }
+
     @Override
-    public void removeAllUsers() {
+    public synchronized void removeAllUsers() {
         TxtFilesHelper.clear(Constants.REGISTERED_USERS_FILE_NAME);
     }
 
     @Override
-    public Pair<User, Boolean> getUserByUsername(String username) throws UserNotFoundException {
+    public synchronized Pair<User, Boolean> getUserByUsername(String username) throws UserNotFoundException {
         return searchUser(username);
     }
 
     @Override
-    public List<Pair<User, Boolean>> getAllUsers() {
+    public synchronized List<Pair<User, Boolean>> getAllUsers() {
         return getAllRegisteredUsersOnFile();
     }
 
     @Override
-    public void observe(UsersObserver<User, Boolean> usersObserver) {
+    public synchronized void observe(UsersObserver<User, Boolean> usersObserver) {
         attachObserver(usersObserver);
     }
 

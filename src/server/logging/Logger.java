@@ -8,6 +8,10 @@ public class Logger {
         System.out.println(ConsoleColors.CYAN + "STATUS <" + o.getClass() + ">: " + statusMessage + ConsoleColors.RESET);
     }
 
+    public static void logRegistration(Object o, String registrationMessage) {
+        System.out.println(ConsoleColors.GREEN + "REGISTRATION <" + o.getClass() + ">: " + registrationMessage + ConsoleColors.RESET);
+    }
+
     public static void logConnection(Object o, String connectionMessage) {
         System.out.println(ConsoleColors.YELLOW + "CONNECTION <" + o.getClass() + ">: " + connectionMessage + ConsoleColors.RESET);
     }

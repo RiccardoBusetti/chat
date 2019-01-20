@@ -31,6 +31,8 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
     public synchronized void addUser(User user, Socket information) {
         onlineUsers.add(new Pair<>(user, information));
 
+        if (isObserverAttached()) usersObserver.onUserAdded(getAllUsers());
+
         Logger.logConnection(this, "User " + user.getUsername() + " connected!");
     }
 
@@ -38,6 +40,8 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
     public synchronized void removeUser(String username) {
         try {
             onlineUsers.remove(searchUserByUsername(username));
+
+            if (isObserverAttached()) usersObserver.onUserModified(getAllUsers());
 
             Logger.logConnection(this, "User " + username + " disconnected!");
         } catch (UserNotFoundException exc) {
@@ -61,7 +65,7 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
     }
 
     @Override
-    public void observe(UsersObserver<User, Socket> usersObserver) {
+    public synchronized void observe(UsersObserver<User, Socket> usersObserver) {
         attachObserver(usersObserver);
     }
 
