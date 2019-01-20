@@ -41,7 +41,7 @@ public class TxtFilesHelper {
 
     private static void clearOnFile(String fileName) throws IOException {
         File file = new File(Constants.BASE_DIR + fileName + Constants.TXT_EXTENSION);
-        PrintWriter printWriter = new PrintWriter(new FileOutputStream(file, true));
+        PrintWriter printWriter = new PrintWriter(new FileOutputStream(file, false));
 
         printWriter.print(Constants.EMPTY_FILE);
         printWriter.close();

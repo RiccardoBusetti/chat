@@ -22,4 +22,6 @@ public interface Users<U, I> {
     Pair<U, I> getUserByUsername(String username) throws UserNotFoundException;
 
     List<Pair<U, I>> getAllUsers();
+
+    void observe(UsersObserver<U, I> usersObserver);
 }

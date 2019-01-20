@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Class responsible of managing the online users of the chat.
  */
-public class OnlineUsers implements Users<User, Socket> {
+public class OnlineUsers extends ServiceUsers<User, Socket> {
     private static OnlineUsers instance;
 
     private List<Pair<User, Socket>> onlineUsers;
@@ -58,6 +58,11 @@ public class OnlineUsers implements Users<User, Socket> {
     @Override
     public synchronized List<Pair<User, Socket>> getAllUsers() {
         return onlineUsers;
+    }
+
+    @Override
+    public void observe(UsersObserver<User, Socket> usersObserver) {
+        attachObserver(usersObserver);
     }
 
     private Pair<User, Socket> searchUserByUsername(String username) throws UserNotFoundException {

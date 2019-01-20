@@ -11,12 +11,22 @@ import java.net.ServerSocket;
 public class MessagingService {
     private ServerSocket serverSocket;
     private int port;
+    private boolean isAsync;
 
-    public MessagingService(int port) {
+    public MessagingService(int port, boolean isAsync) {
         this.port = port;
+        this.isAsync = isAsync;
     }
 
     public void start() {
+        if (isAsync) {
+            new Thread(this::startService).start();
+        } else {
+            startService();
+        }
+    }
+
+    private void startService() {
         try {
             Logger.logStatus(this, "Server starting on port " + port);
 
@@ -41,6 +51,7 @@ public class MessagingService {
 
     public static class Builder {
         private int port;
+        private boolean isAsync = false;
 
         public Builder onPort(int port) {
             this.port = port;
@@ -48,8 +59,14 @@ public class MessagingService {
             return this;
         }
 
+        public Builder async() {
+            this.isAsync = true;
+
+            return this;
+        }
+
         public MessagingService build() {
-            return new MessagingService(this.port);
+            return new MessagingService(this.port, this.isAsync);
         }
     }
 }
