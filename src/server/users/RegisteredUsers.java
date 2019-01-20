@@ -9,7 +9,6 @@ import server.io.TxtUserHelper;
 import server.logging.Logger;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -38,7 +37,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
         String encodedUser = TxtUserHelper.encodeUser(user, information);
         TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, encodedUser);
 
-        if (isObserverAttached()) usersObserver.onUserAdded(getAllUsers());
+        if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
 
         Logger.logRegistration(this, "User " + user.getUsername() + " registered.");
     }
@@ -48,7 +47,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
         try {
             removeUserAndRewriteFile(username);
 
-            if (isObserverAttached()) usersObserver.onUserModified(getAllUsers());
+            if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
 
             Logger.logRegistration(this, "User " + username + " removed.");
         } catch (UserNotFoundException exc) {
@@ -60,24 +59,12 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
         try {
             blockUserAndRewriteFile(username);
 
-            if (isObserverAttached()) usersObserver.onUserModified(getAllUsers());
+            if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
 
             Logger.logRegistration(this, "User " + username + " blocked.");
         } catch (UserNotFoundException exc) {
             Logger.logError(this, exc.getMessage());
         }
-    }
-
-    public synchronized boolean login(String username, String password) {
-        try {
-            Pair<User, Boolean> foundUser = searchUser(username);
-
-            return foundUser.getKey().getPassword().equals(password) && !foundUser.getValue();
-        } catch (UserNotFoundException exc) {
-            Logger.logError(this, exc.getMessage());
-        }
-
-        return false;
     }
 
     @Override

@@ -5,16 +5,14 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import server.MessagingService;
-import server.constants.Constants;
 import server.entities.User;
-import server.io.TxtFilesHelper;
-import server.users.RegisteredUsers;
-import server.users.Users;
+import server.users.OnlineUsers;
 import server.users.UsersObserver;
 
+import java.net.Socket;
 import java.util.List;
 
-public class ServerTest extends Application implements UsersObserver<User, Boolean> {
+public class ServerTest extends Application implements UsersObserver<User, Socket> {
 
     private Text statusText;
 
@@ -41,15 +39,12 @@ public class ServerTest extends Application implements UsersObserver<User, Boole
                 .async()
                 .build()
                 .start();
+
+        OnlineUsers.getInstance().observe(this);
     }
 
     @Override
-    public void onUserAdded(List<Pair<User, Boolean>> users) {
-        statusText.setText("Added new user " + users.size());
-    }
-
-    @Override
-    public void onUserModified(List<Pair<User, Boolean>> users) {
-        statusText.setText("User modified");
+    public void onUsersChanged(List<Pair<User, Socket>> users) {
+        statusText.setText("New user online " + users.get(users.size() - 1).getKey().getUsername());
     }
 }
