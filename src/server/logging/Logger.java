@@ -19,4 +19,8 @@ public class Logger {
     public static void logError(Object o, String errorMessage) {
         System.out.println(ConsoleColors.RED + "ERROR: <" + o.getClass() + ">" + errorMessage + ConsoleColors.RESET);
     }
+
+    public static void logPacket(Object o, String packetMessage) {
+        System.out.println(ConsoleColors.PURPLE + "PACKET: <" + o.getClass() + ">" + packetMessage + ConsoleColors.RESET);
+    }
 }
