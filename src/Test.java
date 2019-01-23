@@ -1,16 +1,12 @@
-import server.constants.Constants;
-import server.io.TxtFilesHelper;
+import server.entities.packets.Packet;
+import server.packets.PacketHeaderHelper;
 
 public class Test {
 
     public static void main(String[] args) {
-        TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, "riccardo,ciao,true");
-        TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, "paola,come,false");
-        TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, "carlo,va,true");
+        PacketHeaderHelper headerHelper = new PacketHeaderHelper();
 
-        for (String line : TxtFilesHelper.getAllLines(Constants.REGISTERED_USERS_FILE_NAME)) {
-            System.out.println(line);
-        }
+        System.out.println(headerHelper.encodeHeader(Packet.HeaderType.LOGIN_DATA));
     }
 
 }
