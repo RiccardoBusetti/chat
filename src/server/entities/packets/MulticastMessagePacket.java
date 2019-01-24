@@ -1,5 +1,9 @@
 package server.entities.packets;
 
+/**
+ * POJO that represents a specific packet that contains
+ * all the data necessary to send a message to a group of clients.
+ */
 public class MulticastMessagePacket extends Packet {
     private String senderUsername;
     private String content;

@@ -1,5 +1,8 @@
 package server.entities.packets;
 
+/**
+ * POJO that represents the base packet.
+ */
 public class Packet {
     private HeaderType headerType;
 

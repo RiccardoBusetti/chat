@@ -1,5 +1,9 @@
 package server.entities.packets;
 
+/**
+ * POJO that represents a specific packet used to
+ * notify the user about its ban status.
+ */
 public class BanPacket extends Packet {
     private boolean isBanned;
 

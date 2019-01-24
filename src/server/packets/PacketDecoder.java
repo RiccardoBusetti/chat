@@ -7,7 +7,7 @@ import server.entities.packets.Packet;
 import server.entities.packets.UnicastMessagePacket;
 
 /**
- * Class responsible of parsing the different packets.
+ * Class responsible of decoding the incoming packets.
  */
 public class PacketDecoder {
 
@@ -25,10 +25,10 @@ public class PacketDecoder {
 
         switch (packetHeader) {
             case LOGIN_DATA:
-                decodedPacket = decodeAccess(packetHeader, packetData, true);
+                decodedPacket = decodeAccessData(packetHeader, packetData, true);
                 break;
             case REGISTER_DATA:
-                decodedPacket = decodeAccess(packetHeader, packetData, false);
+                decodedPacket = decodeAccessData(packetHeader, packetData, false);
                 break;
             case UNICAST_MESSAGE:
                 decodedPacket = decodeUnicastMessage(packetHeader, packetData);
@@ -43,7 +43,11 @@ public class PacketDecoder {
         return decodedPacket;
     }
 
-    private AccessPacket decodeAccess(Packet.HeaderType packetHeader, String[] packetData, boolean isLogin) {
+    /**
+     * Decodes the access data packet that has the following semantics:
+     * [header,username,password].
+     */
+    private AccessPacket decodeAccessData(Packet.HeaderType packetHeader, String[] packetData, boolean isLogin) {
         AccessPacket accessPacket = new AccessPacket();
         accessPacket.setHeaderType(packetHeader);
         accessPacket.setUsername(packetData[1]);
@@ -53,6 +57,10 @@ public class PacketDecoder {
         return accessPacket;
     }
 
+    /**
+     * Decodes the unicast message packet that has the following semantics:
+     * [header,sender,recipient,content].
+     */
     private UnicastMessagePacket decodeUnicastMessage(Packet.HeaderType packetHeader, String[] packetData) {
         UnicastMessagePacket unicastMessagePacket = new UnicastMessagePacket();
         unicastMessagePacket.setHeaderType(packetHeader);
@@ -63,6 +71,10 @@ public class PacketDecoder {
         return unicastMessagePacket;
     }
 
+    /**
+     * Decodes the multicast message packet that has the following semantics:
+     * [header,sender,content].
+     */
     private MulticastMessagePacket decodeMulticastMessage(Packet.HeaderType packetHeader, String[] packetData) {
         MulticastMessagePacket multicastMessagePacket = new MulticastMessagePacket();
         multicastMessagePacket.setHeaderType(packetHeader);
