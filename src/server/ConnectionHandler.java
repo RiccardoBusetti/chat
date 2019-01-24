@@ -1,16 +1,21 @@
 package server;
 
+import com.sun.deploy.trace.LoggerTraceListener;
 import server.constants.Constants;
 import server.entities.User;
-import server.exceptions.UserNotFoundException;
+import server.entities.packets.AccessPacket;
+import server.entities.packets.AccessResultPacket;
+import server.entities.packets.Packet;
 import server.logging.Logger;
-import server.login.LoginHelper;
+import server.access.AccessHelper;
+import server.packets.PacketDecoder;
+import server.packets.PacketsQueue;
 import server.users.OnlineUsers;
+import server.users.RegisteredUsers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 /**
@@ -38,36 +43,77 @@ public class ConnectionHandler implements Runnable {
 
             listen();
         } catch (IOException e) {
-            e.printStackTrace();
+            Logger.logError(this, "Error while handling the connection.");
         }
     }
 
-    // TODO: implement the login with the messages parser.
+    // TODO: implement the access with the messages parser.
     private void listen() throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-        String loginCredentials = bufferedReader.readLine();
-        String[] credentials = loginCredentials.split(Constants.COMMA_SEPARATOR);
-        user = new User(credentials[0], credentials[1]);
+        handleAccess(bufferedReader);
+    }
 
-        switch (LoginHelper.login(user.getUsername(), user.getPassword())) {
-            case LOGIN_SUCCESSFUL:
-                OnlineUsers.getInstance().addUser(user, clientSocket);
-                Logger.logStatus(this, "The user is registered!");
+    private void handleAccess(BufferedReader bufferedReader) throws IOException {
+        boolean isAllowed = false;
+        PacketDecoder packetDecoder = new PacketDecoder();
 
-                try {
-                    PrintWriter printWriter = new PrintWriter(OnlineUsers.getInstance().getUserByUsername("riccardo").getValue().getOutputStream(), true);
-                    printWriter.println("Login successful");
-                } catch (UserNotFoundException e) {
-                    e.printStackTrace();
+        while (!isAllowed) {
+            Packet decodedPacket = packetDecoder.decode(bufferedReader.readLine());
+
+            if (decodedPacket instanceof AccessPacket) {
+                AccessPacket accessPacket = (AccessPacket) decodedPacket;
+
+                if (accessPacket.isLogin()) {
+                    isAllowed = handleLogin(accessPacket);
+                } else {
+                    isAllowed = handleRegister(accessPacket);
                 }
+            }
+        }
+    }
+
+    private boolean handleLogin(AccessPacket accessPacket) {
+        User user = new User();
+        user.setUsername(accessPacket.getUsername());
+        user.setPassword(accessPacket.getPassword());
+
+        AccessResultPacket accessResultPacket = new AccessResultPacket();
+
+        switch (AccessHelper.login(user.getUsername(), user.getPassword())) {
+            case LOGIN_SUCCESSFUL:
+                accessResultPacket.setAllowed(true);
+
+                OnlineUsers.getInstance().addUser(user, clientSocket);
                 break;
             case LOGIN_NOT_EXISTING_USER:
-                Logger.logStatus(this, "The user is not registered!");
+                accessResultPacket.setAllowed(false);
                 break;
             case LOGIN_WRONG_CREDENTIALS:
-                Logger.logStatus(this, "The credentials are wrong!");
+                accessResultPacket.setAllowed(false);
                 break;
         }
+
+        PacketsQueue.getInstance().enqueuePacket(accessResultPacket);
+
+        return accessResultPacket.isAllowed();
+    }
+
+    private boolean handleRegister(AccessPacket accessPacket) {
+        boolean isAllowed = false;
+
+        switch (AccessHelper.register(accessPacket.getUsername(), accessPacket.getPassword())) {
+            case REGISTRATION_SUCCESSFUL:
+                isAllowed = true;
+
+                RegisteredUsers.getInstance().addUser(user, false);
+                OnlineUsers.getInstance().addUser(user, clientSocket);
+                break;
+            case REGISTRATION_ALREADY_EXISTING_USER:
+
+                break;
+        }
+
+        return isAllowed;
     }
 }

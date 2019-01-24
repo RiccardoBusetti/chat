@@ -1,4 +1,4 @@
-package server.login;
+package server.access;
 
 import javafx.util.Pair;
 import server.entities.User;
@@ -7,9 +7,9 @@ import server.users.RegisteredUsers;
 
 /**
  * Class responsible of providing helper methods to
- * perform actions related to the login.
+ * perform actions related to the access.
  */
-public class LoginHelper {
+public class AccessHelper {
 
     public static RegistrationResult register(String username, String password) {
         try {

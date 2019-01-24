@@ -2,7 +2,7 @@ package server.entities.packets;
 
 /**
  * POJO that represents the specific packet used to perform
- * access related operations like login or registration.
+ * access related operations like access or registration.
  */
 public class AccessPacket extends Packet {
     private String username;
