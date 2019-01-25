@@ -55,7 +55,7 @@ public class PacketsDecoder {
                 decodedPacket = decodeErrorMessage(packetHeader, packetData);
                 break;
             default:
-                decodedPacket = new Packet(packetHeader);
+                decodedPacket = new Packet(Packet.HeaderType.EMPTY_PACKET);
         }
 
         return decodedPacket;

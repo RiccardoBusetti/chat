@@ -2,10 +2,7 @@ package server;
 
 import server.access.AccessHelper;
 import server.entities.User;
-import server.entities.packets.AccessPacket;
-import server.entities.packets.AccessResultPacket;
-import server.entities.packets.ErrorPacket;
-import server.entities.packets.Packet;
+import server.entities.packets.*;
 import server.logging.Logger;
 import server.packets.PacketsDecoder;
 import server.packets.PacketsQueue;
@@ -40,7 +37,7 @@ public class ConnectionHandler implements Runnable {
             Logger.logConnection(this, "Handling connection with the client " + clientSocket.getRemoteSocketAddress());
 
             listen();
-        } catch (IOException e) {
+        } catch (IOException exc) {
             Logger.logError(this, "Error while handling the connection.");
         }
     }
@@ -49,6 +46,8 @@ public class ConnectionHandler implements Runnable {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         handleAccess(bufferedReader);
+
+        handleMessages(bufferedReader);
     }
 
     private void handleAccess(BufferedReader bufferedReader) throws IOException {
@@ -60,19 +59,34 @@ public class ConnectionHandler implements Runnable {
 
             if (packet instanceof AccessPacket) {
                 AccessPacket accessPacket = (AccessPacket) packet;
+                AccessResultPacket accessResultPacket;
 
                 if (accessPacket.getHeaderType() == Packet.HeaderType.LOGIN_DATA) {
-                    isAllowed = handleLogin(accessPacket);
+                    accessResultPacket = handleLogin(accessPacket);
                 } else {
-                    isAllowed = handleRegister(accessPacket);
+                    accessResultPacket = handleRegister(accessPacket);
                 }
+
+                isAllowed = accessResultPacket.isAllowed();
+
+                // Prepares the result of the access.
+                DispatchablePacket dispatchablePacket = new DispatchablePacket();
+                dispatchablePacket.setPacket(accessResultPacket);
+                dispatchablePacket.addRecipientSocket(clientSocket);
+                // Adds the result message to the queue.
+                PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
             } else {
-                PacketsQueue.getInstance().enqueuePacket(new ErrorPacket(Packet.HeaderType.ERROR_MESSAGE, "You need to login or register before continuing."));
+                ErrorPacket errorPacket = new ErrorPacket(Packet.HeaderType.ERROR_MESSAGE, "You need to register before sending messages.");
+                // Prepares the result of the access.
+                DispatchablePacket dispatchablePacket = new DispatchablePacket();
+                dispatchablePacket.setPacket(errorPacket);
+                // Adds the error message to the queue.
+                PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
             }
         }
     }
 
-    private boolean handleLogin(AccessPacket accessPacket) {
+    private AccessResultPacket handleLogin(AccessPacket accessPacket) {
         Logger.logStatus(this, "Handling login with the client " + clientSocket.getRemoteSocketAddress());
 
         User user = new User();
@@ -96,13 +110,10 @@ public class ConnectionHandler implements Runnable {
                 accessResultPacket.setAllowed(false);
         }
 
-        // Adds the packet to the queue.
-        PacketsQueue.getInstance().enqueuePacket(accessResultPacket);
-
-        return accessResultPacket.isAllowed();
+        return accessResultPacket;
     }
 
-    private boolean handleRegister(AccessPacket accessPacket) {
+    private AccessResultPacket handleRegister(AccessPacket accessPacket) {
         Logger.logStatus(this, "Handling registration with the client " + clientSocket.getRemoteSocketAddress());
 
         User user = new User();
@@ -125,9 +136,11 @@ public class ConnectionHandler implements Runnable {
                 break;
         }
 
-        // Adds the response message to the queue.
-        PacketsQueue.getInstance().enqueuePacket(accessResultPacket);
+        return accessResultPacket;
+    }
 
-        return accessResultPacket.isAllowed();
+    // TODO: handle messages.
+    private void handleMessages(BufferedReader bufferedReader) {
+
     }
 }

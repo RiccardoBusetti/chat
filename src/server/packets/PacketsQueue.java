@@ -1,6 +1,6 @@
 package server.packets;
 
-import server.entities.packets.Packet;
+import server.entities.packets.DispatchablePacket;
 import server.logging.Logger;
 
 import java.util.concurrent.LinkedBlockingQueue;
@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class PacketsQueue {
     private static PacketsQueue instance;
 
-    private LinkedBlockingQueue<Packet> packetsQueue;
+    private LinkedBlockingQueue<DispatchablePacket> packetsQueue;
 
     private PacketsQueue() {
         this.packetsQueue = new LinkedBlockingQueue<>();
@@ -23,19 +23,19 @@ public class PacketsQueue {
         return instance;
     }
 
-    public void enqueuePacket(Packet packet) {
+    public void enqueuePacket(DispatchablePacket dispatchablePacket) {
         try {
-            put(packet);
+            put(dispatchablePacket);
         } catch (InterruptedException e) {
             Logger.logError(this, "Error during enqueuing packet.");
         }
     }
 
-    private void put(Packet packet) throws InterruptedException {
-        packetsQueue.put(packet);
+    private void put(DispatchablePacket dispatchablePacket) throws InterruptedException {
+        packetsQueue.put(dispatchablePacket);
     }
 
-    public Packet dequeuePacket() {
+    public DispatchablePacket dequeuePacket() {
         try {
             return take();
         } catch (InterruptedException e) {
@@ -45,7 +45,7 @@ public class PacketsQueue {
         return null;
     }
 
-    private Packet take() throws InterruptedException {
+    private DispatchablePacket take() throws InterruptedException {
         return packetsQueue.take();
     }
 }

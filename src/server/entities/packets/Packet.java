@@ -29,6 +29,7 @@ public class Packet {
         UNICAST_MESSAGE,
         MULTICAST_MESSAGE,
         BAN_STATUS,
-        ERROR_MESSAGE
+        ERROR_MESSAGE,
+        EMPTY_PACKET
     }
 }
