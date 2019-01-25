@@ -57,10 +57,10 @@ public class ConnectionHandler implements Runnable {
         PacketsDecoder packetsDecoder = new PacketsDecoder();
 
         while (!isAllowed) {
-            Packet decodedPacket = packetsDecoder.decode(bufferedReader.readLine());
+            Packet packet = packetsDecoder.decode(bufferedReader.readLine());
 
-            if (decodedPacket instanceof AccessPacket) {
-                AccessPacket accessPacket = (AccessPacket) decodedPacket;
+            if (packet instanceof AccessPacket) {
+                AccessPacket accessPacket = (AccessPacket) packet;
 
                 if (accessPacket.isLogin()) {
                     isAllowed = handleLogin(accessPacket);
@@ -78,6 +78,7 @@ public class ConnectionHandler implements Runnable {
 
         AccessResultPacket accessResultPacket = new AccessResultPacket();
 
+        // Performs the login and handles the result specifically.
         switch (AccessHelper.login(user.getUsername(), user.getPassword())) {
             case LOGIN_SUCCESSFUL:
                 accessResultPacket.setAllowed(true);
@@ -92,6 +93,7 @@ public class ConnectionHandler implements Runnable {
                 break;
         }
 
+        // Adds the packet to the queue.
         PacketsQueue.getInstance().enqueuePacket(accessResultPacket);
 
         return accessResultPacket.isAllowed();
