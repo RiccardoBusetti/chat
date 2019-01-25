@@ -28,6 +28,7 @@ public class Packet {
         REGISTER_RESULT,
         UNICAST_MESSAGE,
         MULTICAST_MESSAGE,
-        BAN_STATUS
+        BAN_STATUS,
+        ERROR_MESSAGE
     }
 }

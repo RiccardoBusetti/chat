@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Class responsible of encoding the outcoming packets.
  */
-public class PacketEncoder {
+public class PacketsEncoder {
 
     public String encode(Packet packet) {
         return encodePacket(packet);
@@ -18,8 +18,8 @@ public class PacketEncoder {
     private String encodePacket(Packet packet) {
         List<String> stringsToEncode = new ArrayList<>();
 
-        PacketHeaderHelper packetHeaderHelper = new PacketHeaderHelper();
-        String packetHeader = packetHeaderHelper.encodeHeader(packet.getHeaderType());
+        PacketsHeaderHelper packetsHeaderHelper = new PacketsHeaderHelper();
+        String packetHeader = packetsHeaderHelper.encodeHeader(packet.getHeaderType());
 
         stringsToEncode.add(packetHeader);
 
@@ -38,6 +38,9 @@ public class PacketEncoder {
                 break;
             case BAN_STATUS:
                 encodeBanStatus(stringsToEncode, (BanPacket) packet);
+                break;
+            case ERROR_MESSAGE:
+                encodeErrorMessage(stringsToEncode, (ErrorPacket) packet);
                 break;
         }
 
@@ -77,6 +80,14 @@ public class PacketEncoder {
      */
     private void encodeBanStatus(List<String> stringsToEncode, BanPacket banPacket) {
         stringsToEncode.add(String.valueOf(banPacket.isBanned()));
+    }
+
+    /**
+     * Encodes the error packet with the following semantics:
+     * [header,errorMessage].
+     */
+    private void encodeErrorMessage(List<String> stringsToEncode, ErrorPacket errorPacket) {
+        stringsToEncode.add(errorPacket.getErrorMessage());
     }
 
     /**

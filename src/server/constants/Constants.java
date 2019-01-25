@@ -4,10 +4,6 @@ package server.constants;
  * Class containing all the constants used in the server.
  */
 public class Constants {
-    // Login constants.
-    public static final String USERNAME_NOT_AVAILABLE = "USR N/A";
-    public static final String PASSWORD_NOT_AVAILABLE = "PWD N/A";
-
     // Files constants.
     public static final String BASE_DIR = "/Users/riccardobusetti/Desktop/Chat/";
     public static final String TXT_EXTENSION = ".txt";
@@ -17,4 +13,12 @@ public class Constants {
 
     // Packets constants.
     public static final String DIVIDE_REGEX = "1f";
+    public static final String LOGIN_DATA = "Login";
+    public static final String LOGIN_RESULT = "LoginResult";
+    public static final String REGISTER_DATA = "Register";
+    public static final String REGISTER_RESULT = "RegisterResult";
+    public static final String UNICAST_MESSAGE = "UniMsg";
+    public static final String MULTICAST_MESSAGE = "MultiMsg";
+    public static final String BAN_STATUS = "BanStatus";
+    public static final String ERROR_MESSAGE = "Error";
 }

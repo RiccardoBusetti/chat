@@ -1,14 +1,12 @@
 package server;
 
-import com.sun.deploy.trace.LoggerTraceListener;
-import server.constants.Constants;
+import server.access.AccessHelper;
 import server.entities.User;
 import server.entities.packets.AccessPacket;
 import server.entities.packets.AccessResultPacket;
 import server.entities.packets.Packet;
 import server.logging.Logger;
-import server.access.AccessHelper;
-import server.packets.PacketDecoder;
+import server.packets.PacketsDecoder;
 import server.packets.PacketsQueue;
 import server.users.OnlineUsers;
 import server.users.RegisteredUsers;
@@ -56,10 +54,10 @@ public class ConnectionHandler implements Runnable {
 
     private void handleAccess(BufferedReader bufferedReader) throws IOException {
         boolean isAllowed = false;
-        PacketDecoder packetDecoder = new PacketDecoder();
+        PacketsDecoder packetsDecoder = new PacketsDecoder();
 
         while (!isAllowed) {
-            Packet decodedPacket = packetDecoder.decode(bufferedReader.readLine());
+            Packet decodedPacket = packetsDecoder.decode(bufferedReader.readLine());
 
             if (decodedPacket instanceof AccessPacket) {
                 AccessPacket accessPacket = (AccessPacket) decodedPacket;

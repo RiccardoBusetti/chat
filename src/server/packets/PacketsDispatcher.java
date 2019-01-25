@@ -3,7 +3,7 @@ package server.packets;
 import server.entities.packets.Packet;
 import server.logging.Logger;
 
-public class PacketDispatcher implements Runnable {
+public class PacketsDispatcher implements Runnable {
 
     @Override
     public void run() {
@@ -15,8 +15,8 @@ public class PacketDispatcher implements Runnable {
             Logger.logPacket(this, "Waiting for new packets in the queue...");
 
             Packet packet = PacketsQueue.getInstance().dequeuePacket();
-            PacketEncoder packetEncoder = new PacketEncoder();
-            String encodedPacket = packetEncoder.encode(packet);
+            PacketsEncoder packetsEncoder = new PacketsEncoder();
+            String encodedPacket = packetsEncoder.encode(packet);
 
             // TODO: implement message sending.
 

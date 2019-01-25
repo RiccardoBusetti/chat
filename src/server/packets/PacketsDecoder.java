@@ -9,7 +9,7 @@ import server.entities.packets.UnicastMessagePacket;
 /**
  * Class responsible of decoding the incoming packets.
  */
-public class PacketDecoder {
+public class PacketsDecoder {
 
     public Packet decode(String packet) {
         return decodePacket(packet);
@@ -18,8 +18,8 @@ public class PacketDecoder {
     private Packet decodePacket(String packet) {
         String[] packetData = packet.split(Constants.DIVIDE_REGEX);
 
-        PacketHeaderHelper packetHeaderHelper = new PacketHeaderHelper();
-        Packet.HeaderType packetHeader = packetHeaderHelper.decodeHeader(packetData[0]);
+        PacketsHeaderHelper packetsHeaderHelper = new PacketsHeaderHelper();
+        Packet.HeaderType packetHeader = packetsHeaderHelper.decodeHeader(packetData[0]);
 
         Packet decodedPacket;
 
