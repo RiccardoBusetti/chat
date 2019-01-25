@@ -10,7 +10,6 @@ import java.util.List;
  * Class responsible of encoding the outcoming packets.
  */
 public class PacketsEncoder {
-
     public String encode(Packet packet) {
         return encodePacket(packet);
     }
@@ -24,8 +23,14 @@ public class PacketsEncoder {
         stringsToEncode.add(packetHeader);
 
         switch (packet.getHeaderType()) {
+            case LOGIN_DATA:
+                encodeAccessData(stringsToEncode, (AccessPacket) packet);
+                break;
             case LOGIN_RESULT:
                 encodeAccessResult(stringsToEncode, (AccessResultPacket) packet);
+                break;
+            case REGISTER_DATA:
+                encodeAccessData(stringsToEncode, (AccessPacket) packet);
                 break;
             case REGISTER_RESULT:
                 encodeAccessResult(stringsToEncode, (AccessResultPacket) packet);
@@ -45,6 +50,15 @@ public class PacketsEncoder {
         }
 
         return encodeStrings(stringsToEncode);
+    }
+
+    /**
+     * Encodes the access data packet with the following semantics:
+     * [header,username,password].
+     */
+    private void encodeAccessData(List<String> stringsToEncode, AccessPacket accessPacket) {
+        stringsToEncode.add(accessPacket.getUsername());
+        stringsToEncode.add(accessPacket.getPassword());
     }
 
     /**
@@ -107,5 +121,4 @@ public class PacketsEncoder {
 
         return stringBuilder.toString();
     }
-
 }

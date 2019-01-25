@@ -1,16 +1,12 @@
 package server.packets;
 
 import server.constants.Constants;
-import server.entities.packets.AccessPacket;
-import server.entities.packets.MulticastMessagePacket;
-import server.entities.packets.Packet;
-import server.entities.packets.UnicastMessagePacket;
+import server.entities.packets.*;
 
 /**
  * Class responsible of decoding the incoming packets.
  */
 public class PacketsDecoder {
-
     public Packet decode(String packet) {
         return decodePacket(packet);
     }
@@ -25,16 +21,28 @@ public class PacketsDecoder {
 
         switch (packetHeader) {
             case LOGIN_DATA:
-                decodedPacket = decodeAccessData(packetHeader, packetData, true);
+                decodedPacket = decodeAccessData(packetHeader, packetData);
+                break;
+            case LOGIN_RESULT:
+                decodedPacket = decodeAccessResult(packetHeader, packetData);
                 break;
             case REGISTER_DATA:
-                decodedPacket = decodeAccessData(packetHeader, packetData, false);
+                decodedPacket = decodeAccessData(packetHeader, packetData);
+                break;
+            case REGISTER_RESULT:
+                decodedPacket = decodeAccessResult(packetHeader, packetData);
                 break;
             case UNICAST_MESSAGE:
                 decodedPacket = decodeUnicastMessage(packetHeader, packetData);
                 break;
             case MULTICAST_MESSAGE:
                 decodedPacket = decodeMulticastMessage(packetHeader, packetData);
+                break;
+            case BAN_STATUS:
+                decodedPacket = decodeBanStatus(packetHeader, packetData);
+                break;
+            case ERROR_MESSAGE:
+                decodedPacket = decodeErrorMessage(packetHeader, packetData);
                 break;
             default:
                 decodedPacket = new Packet(packetHeader);
@@ -47,14 +55,25 @@ public class PacketsDecoder {
      * Decodes the access data packet that has the following semantics:
      * [header,username,password].
      */
-    private AccessPacket decodeAccessData(Packet.HeaderType packetHeader, String[] packetData, boolean isLogin) {
+    private AccessPacket decodeAccessData(Packet.HeaderType packetHeader, String[] packetData) {
         AccessPacket accessPacket = new AccessPacket();
         accessPacket.setHeaderType(packetHeader);
         accessPacket.setUsername(packetData[1]);
         accessPacket.setPassword(packetData[2]);
-        accessPacket.setLogin(isLogin);
 
         return accessPacket;
+    }
+
+    /**
+     * Decodes the access result packet that has the following semantics:
+     * [header,isAllowed].
+     */
+    private AccessResultPacket decodeAccessResult(Packet.HeaderType packetHeader, String[] packetData) {
+        AccessResultPacket accessResultPacket = new AccessResultPacket();
+        accessResultPacket.setHeaderType(packetHeader);
+        accessResultPacket.setAllowed(Boolean.valueOf(packetData[1]));
+
+        return accessResultPacket;
     }
 
     /**
@@ -82,5 +101,29 @@ public class PacketsDecoder {
         multicastMessagePacket.setContent(packetData[2]);
 
         return multicastMessagePacket;
+    }
+
+    /**
+     * Decodes the ban status packet that has the following semantics:
+     * [header,isBanned].
+     */
+    private BanPacket decodeBanStatus(Packet.HeaderType packetHeader, String[] packetData) {
+        BanPacket banPacket = new BanPacket();
+        banPacket.setHeaderType(packetHeader);
+        banPacket.setBanned(Boolean.valueOf(packetData[1]));
+
+        return banPacket;
+    }
+
+    /**
+     * Decodes the error message packet that has the following semantics:
+     * [header,errorMessage].
+     */
+    private ErrorPacket decodeErrorMessage(Packet.HeaderType packetHeader, String[] packetData) {
+        ErrorPacket errorPacket = new ErrorPacket();
+        errorPacket.setHeaderType(packetHeader);
+        errorPacket.setErrorMessage(packetData[1]);
+
+        return errorPacket;
     }
 }

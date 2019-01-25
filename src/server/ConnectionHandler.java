@@ -4,6 +4,7 @@ import server.access.AccessHelper;
 import server.entities.User;
 import server.entities.packets.AccessPacket;
 import server.entities.packets.AccessResultPacket;
+import server.entities.packets.ErrorPacket;
 import server.entities.packets.Packet;
 import server.logging.Logger;
 import server.packets.PacketsDecoder;
@@ -45,7 +46,6 @@ public class ConnectionHandler implements Runnable {
         }
     }
 
-    // TODO: implement the access with the messages parser.
     private void listen() throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
@@ -62,11 +62,17 @@ public class ConnectionHandler implements Runnable {
             if (packet instanceof AccessPacket) {
                 AccessPacket accessPacket = (AccessPacket) packet;
 
-                if (accessPacket.isLogin()) {
+                if (accessPacket.getHeaderType() == Packet.HeaderType.LOGIN_DATA) {
+                    Logger.logStatus(this, "Handling login.");
+
                     isAllowed = handleLogin(accessPacket);
                 } else {
+                    Logger.logStatus(this, "Handling registration.");
+
                     isAllowed = handleRegister(accessPacket);
                 }
+            } else {
+                PacketsQueue.getInstance().enqueuePacket(new ErrorPacket(Packet.HeaderType.ERROR_MESSAGE, "You need to login or register before continuing."));
             }
         }
     }
@@ -77,6 +83,7 @@ public class ConnectionHandler implements Runnable {
         user.setPassword(accessPacket.getPassword());
 
         AccessResultPacket accessResultPacket = new AccessResultPacket();
+        accessResultPacket.setHeaderType(Packet.HeaderType.LOGIN_RESULT);
 
         // Performs the login and handles the result specifically.
         switch (AccessHelper.login(user.getUsername(), user.getPassword())) {
@@ -86,11 +93,9 @@ public class ConnectionHandler implements Runnable {
                 OnlineUsers.getInstance().addUser(user, clientSocket);
                 break;
             case LOGIN_NOT_EXISTING_USER:
-                accessResultPacket.setAllowed(false);
-                break;
             case LOGIN_WRONG_CREDENTIALS:
+            default:
                 accessResultPacket.setAllowed(false);
-                break;
         }
 
         // Adds the packet to the queue.
@@ -100,20 +105,27 @@ public class ConnectionHandler implements Runnable {
     }
 
     private boolean handleRegister(AccessPacket accessPacket) {
-        boolean isAllowed = false;
+        User user = new User();
+        user.setUsername(accessPacket.getUsername());
+        user.setPassword(accessPacket.getPassword());
+
+        AccessResultPacket accessResultPacket = new AccessResultPacket();
+        accessResultPacket.setHeaderType(Packet.HeaderType.REGISTER_RESULT);
 
         switch (AccessHelper.register(accessPacket.getUsername(), accessPacket.getPassword())) {
             case REGISTRATION_SUCCESSFUL:
-                isAllowed = true;
+            case REGISTRATION_ALREADY_EXISTING_USER:
+                accessResultPacket.setAllowed(true);
 
-                RegisteredUsers.getInstance().addUser(user, false);
                 OnlineUsers.getInstance().addUser(user, clientSocket);
                 break;
-            case REGISTRATION_ALREADY_EXISTING_USER:
-
-                break;
+            default:
+                accessResultPacket.setAllowed(false);
         }
 
-        return isAllowed;
+        // Adds the response message to the queue.
+        PacketsQueue.getInstance().enqueuePacket(accessResultPacket);
+
+        return accessResultPacket.isAllowed();
     }
 }

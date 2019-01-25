@@ -7,16 +7,14 @@ package server.entities.packets;
 public class AccessPacket extends Packet {
     private String username;
     private String password;
-    private boolean isLogin;
 
     public AccessPacket() {
     }
 
-    public AccessPacket(HeaderType headerType, String username, String password, boolean isLogin) {
+    public AccessPacket(HeaderType headerType, String username, String password) {
         super(headerType);
         this.username = username;
         this.password = password;
-        this.isLogin = isLogin;
     }
 
     public String getUsername() {
@@ -33,13 +31,5 @@ public class AccessPacket extends Packet {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public boolean isLogin() {
-        return isLogin;
-    }
-
-    public void setLogin(boolean login) {
-        isLogin = login;
     }
 }

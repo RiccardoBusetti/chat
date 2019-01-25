@@ -1,6 +1,7 @@
 package server;
 
 import server.logging.Logger;
+import server.packets.PacketsDispatcher;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -21,6 +22,7 @@ public class MessagingService {
     public void start() {
         if (isAsync) {
             new Thread(this::startService).start();
+            new Thread(new PacketsDispatcher()).start();
         } else {
             startService();
         }
