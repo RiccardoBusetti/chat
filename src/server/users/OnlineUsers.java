@@ -82,6 +82,6 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
             counter++;
         }
 
-        throw new UserNotFoundException();
+        throw new UserNotFoundException(false);
     }
 }

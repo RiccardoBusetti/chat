@@ -2,6 +2,8 @@ package server.packets;
 
 import server.constants.Constants;
 import server.entities.packets.*;
+import server.exceptions.MalformedPacketException;
+import server.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +13,16 @@ import java.util.List;
  */
 public class PacketsEncoder {
     public String encode(Packet packet) {
-        return encodePacket(packet);
+        try {
+            return encodePacket(packet);
+        } catch (MalformedPacketException exc) {
+            Logger.logError(this, exc.getMessage());
+        }
+
+        return "";
     }
 
-    private String encodePacket(Packet packet) {
+    private String encodePacket(Packet packet) throws MalformedPacketException {
         List<String> stringsToEncode = new ArrayList<>();
 
         PacketsHeaderHelper packetsHeaderHelper = new PacketsHeaderHelper();

@@ -1,6 +1,5 @@
 package server.packets;
 
-import server.entities.packets.AccessResultPacket;
 import server.entities.packets.Packet;
 import server.logging.Logger;
 

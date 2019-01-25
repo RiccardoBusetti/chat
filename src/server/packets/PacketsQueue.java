@@ -25,8 +25,6 @@ public class PacketsQueue {
 
     public void enqueuePacket(Packet packet) {
         try {
-            Logger.logPacket(this, "Enqueuing packet with header " + packet.getHeaderType());
-
             put(packet);
         } catch (InterruptedException e) {
             Logger.logError(this, "Error during enqueuing packet.");
@@ -39,8 +37,6 @@ public class PacketsQueue {
 
     public Packet dequeuePacket() {
         try {
-            Logger.logPacket(this, "Dequeuing packet.");
-
             return take();
         } catch (InterruptedException e) {
             Logger.logError(this, "Error during dequeuing packet.");

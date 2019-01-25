@@ -143,7 +143,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
             counter++;
         }
 
-        throw new UserNotFoundException();
+        throw new UserNotFoundException(true);
     }
 
     private List<Pair<User, Boolean>> getAllRegisteredUsersOnFile() {

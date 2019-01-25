@@ -2,16 +2,26 @@ package server.packets;
 
 import server.constants.Constants;
 import server.entities.packets.*;
+import server.exceptions.MalformedPacketException;
+import server.logging.Logger;
 
 /**
  * Class responsible of decoding the incoming packets.
  */
 public class PacketsDecoder {
     public Packet decode(String packet) {
-        return decodePacket(packet);
+        try {
+            Logger.logStatus(this, "Decoding " + packet);
+
+            return decodePacket(packet);
+        } catch (MalformedPacketException exc) {
+            Logger.logError(this, exc.getMessage());
+        }
+
+        return new Packet();
     }
 
-    private Packet decodePacket(String packet) {
+    private Packet decodePacket(String packet) throws MalformedPacketException {
         String[] packetData = packet.split(Constants.DIVIDE_REGEX);
 
         PacketsHeaderHelper packetsHeaderHelper = new PacketsHeaderHelper();

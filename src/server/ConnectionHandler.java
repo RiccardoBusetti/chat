@@ -10,7 +10,6 @@ import server.logging.Logger;
 import server.packets.PacketsDecoder;
 import server.packets.PacketsQueue;
 import server.users.OnlineUsers;
-import server.users.RegisteredUsers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -63,12 +62,8 @@ public class ConnectionHandler implements Runnable {
                 AccessPacket accessPacket = (AccessPacket) packet;
 
                 if (accessPacket.getHeaderType() == Packet.HeaderType.LOGIN_DATA) {
-                    Logger.logStatus(this, "Handling login.");
-
                     isAllowed = handleLogin(accessPacket);
                 } else {
-                    Logger.logStatus(this, "Handling registration.");
-
                     isAllowed = handleRegister(accessPacket);
                 }
             } else {
@@ -78,6 +73,8 @@ public class ConnectionHandler implements Runnable {
     }
 
     private boolean handleLogin(AccessPacket accessPacket) {
+        Logger.logStatus(this, "Handling login with the client " + clientSocket.getRemoteSocketAddress());
+
         User user = new User();
         user.setUsername(accessPacket.getUsername());
         user.setPassword(accessPacket.getPassword());
@@ -94,6 +91,7 @@ public class ConnectionHandler implements Runnable {
                 break;
             case LOGIN_NOT_EXISTING_USER:
             case LOGIN_WRONG_CREDENTIALS:
+            case LOGIN_USER_ALREADY_ONLINE:
             default:
                 accessResultPacket.setAllowed(false);
         }
@@ -105,6 +103,8 @@ public class ConnectionHandler implements Runnable {
     }
 
     private boolean handleRegister(AccessPacket accessPacket) {
+        Logger.logStatus(this, "Handling registration with the client " + clientSocket.getRemoteSocketAddress());
+
         User user = new User();
         user.setUsername(accessPacket.getUsername());
         user.setPassword(accessPacket.getPassword());
@@ -119,8 +119,10 @@ public class ConnectionHandler implements Runnable {
 
                 OnlineUsers.getInstance().addUser(user, clientSocket);
                 break;
+            case REGISTRATION_USER_ALREADY_ONLINE:
             default:
                 accessResultPacket.setAllowed(false);
+                break;
         }
 
         // Adds the response message to the queue.
