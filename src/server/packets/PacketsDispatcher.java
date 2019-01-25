@@ -9,6 +9,10 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
+/**
+ * Thread that is always listening for new messages in the queue
+ * in order to dispatch them.
+ */
 public class PacketsDispatcher implements Runnable {
 
     @Override

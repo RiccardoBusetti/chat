@@ -90,10 +90,12 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
     private void removeUserAndRewriteFile(String username) throws UserNotFoundException {
         List<Pair<User, Boolean>> registeredUsers = getAllUsers();
 
+        // Removes the user from the registered users.
         registeredUsers.remove(searchUser(username, registeredUsers));
 
         TxtFilesHelper.clear(Constants.REGISTERED_USERS_FILE_NAME);
 
+        // Rewrites the file with the user removed.
         for (Pair<User, Boolean> registeredUser : registeredUsers) {
             TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, TxtUserHelper.encodeUser(registeredUser.getKey(), registeredUser.getValue()));
         }
@@ -102,31 +104,22 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
     private void blockUserAndRewriteFile(String username) throws UserNotFoundException {
         List<Pair<User, Boolean>> registeredUsers = getAllUsers();
 
+        // Updates the user status from not blocked to blocked.
         Pair<User, Boolean> foundUser = searchUser(username, registeredUsers);
-
         registeredUsers.remove(foundUser);
-
         Pair<User, Boolean> blockedUser = new Pair<>(foundUser.getKey(), true);
-
         registeredUsers.add(blockedUser);
 
         TxtFilesHelper.clear(Constants.REGISTERED_USERS_FILE_NAME);
 
+        // Rewrites the file with the user blocked status updated.
         for (Pair<User, Boolean> registeredUser : registeredUsers) {
             TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, TxtUserHelper.encodeUser(registeredUser.getKey(), registeredUser.getValue()));
         }
     }
 
     private Pair<User, Boolean> searchUser(String username) throws UserNotFoundException {
-        List<String> encodedRegisteredUsers = TxtFilesHelper.getAllLines(Constants.REGISTERED_USERS_FILE_NAME);
-        List<Pair<User, Boolean>> decodedRegisteredUsers = new ArrayList<>();
-
-        for (String encodedRegisteredUser : encodedRegisteredUsers) {
-            Pair<User, Boolean> decodedRegisteredUser = TxtUserHelper.decodeUser(encodedRegisteredUser);
-            decodedRegisteredUsers.add(decodedRegisteredUser);
-        }
-
-        return searchUser(username, decodedRegisteredUsers);
+        return searchUser(username, getAllUsers());
     }
 
     // TODO: find a way to avoid this code duplication.
@@ -149,6 +142,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
     private List<Pair<User, Boolean>> getAllRegisteredUsersOnFile() {
         List<Pair<User, Boolean>> registeredUsers = new ArrayList<>();
 
+        // Converts
         for (String line : TxtFilesHelper.getAllLines(Constants.REGISTERED_USERS_FILE_NAME)) {
             registeredUsers.add(TxtUserHelper.decodeUser(line));
         }

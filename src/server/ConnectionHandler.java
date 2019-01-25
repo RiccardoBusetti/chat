@@ -57,6 +57,9 @@ public class ConnectionHandler implements Runnable {
         while (!isAllowed) {
             Packet packet = packetsDecoder.decode(bufferedReader.readLine());
 
+            // We need to check if the packet is an access packet, because
+            // we must perform the login/registration before letting the user
+            // send messages.
             if (packet instanceof AccessPacket) {
                 AccessPacket accessPacket = (AccessPacket) packet;
                 AccessResultPacket accessResultPacket;
@@ -93,6 +96,7 @@ public class ConnectionHandler implements Runnable {
         user.setUsername(accessPacket.getUsername());
         user.setPassword(accessPacket.getPassword());
 
+        // Preparing the result packet.
         AccessResultPacket accessResultPacket = new AccessResultPacket();
         accessResultPacket.setHeaderType(Packet.HeaderType.LOGIN_RESULT);
 
@@ -100,7 +104,7 @@ public class ConnectionHandler implements Runnable {
         switch (AccessHelper.login(user.getUsername(), user.getPassword())) {
             case LOGIN_SUCCESSFUL:
                 accessResultPacket.setAllowed(true);
-
+                // Now the user is online, so we will add it to the online users list.
                 OnlineUsers.getInstance().addUser(user, clientSocket);
                 break;
             case LOGIN_NOT_EXISTING_USER:
@@ -120,14 +124,16 @@ public class ConnectionHandler implements Runnable {
         user.setUsername(accessPacket.getUsername());
         user.setPassword(accessPacket.getPassword());
 
+        // Preparing the result packet.
         AccessResultPacket accessResultPacket = new AccessResultPacket();
         accessResultPacket.setHeaderType(Packet.HeaderType.REGISTER_RESULT);
 
+        // Performs the registration and handles the result specifically.
         switch (AccessHelper.register(accessPacket.getUsername(), accessPacket.getPassword())) {
             case REGISTRATION_SUCCESSFUL:
             case REGISTRATION_ALREADY_EXISTING_USER:
                 accessResultPacket.setAllowed(true);
-
+                // Now the user is online, so we will add it to the online users list.
                 OnlineUsers.getInstance().addUser(user, clientSocket);
                 break;
             case REGISTRATION_USER_ALREADY_ONLINE:
