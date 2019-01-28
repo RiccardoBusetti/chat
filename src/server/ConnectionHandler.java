@@ -150,4 +150,9 @@ public class ConnectionHandler implements Runnable {
     private void handleMessages(BufferedReader bufferedReader) {
 
     }
+
+    // TODO: implement checks on the readline to see if the client is still connected or if it is disconnected or if it is sending the END message
+    private boolean checkConnection() {
+        return false;
+    }
 }
