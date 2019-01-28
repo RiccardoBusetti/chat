@@ -100,15 +100,18 @@ public class ControlPanelController {
             updateUI();
         });
 
-        // TODO: try to execute the changes on the UI thread.
         OnlineUsers.getInstance().observe(users -> {
-            onlineUsers.removeAll();
-            onlineUsers.addAll(users);
+            Platform.runLater(() -> {
+                onlineUsers.clear();
+                onlineUsers.addAll(users);
+            });
         });
 
         RegisteredUsers.getInstance().observe(users -> {
-            registeredUsers.removeAll();
-            registeredUsers.addAll(users);
+            Platform.runLater(() -> {
+                registeredUsers.clear();
+                registeredUsers.addAll(users);
+            });
         });
     }
 

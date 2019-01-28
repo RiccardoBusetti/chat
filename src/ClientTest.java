@@ -16,7 +16,7 @@ public class ClientTest {
 
         PacketsEncoder packetsEncoder = new PacketsEncoder();
         PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-        printWriter.println(packetsEncoder.encode(new AccessPacket(Packet.HeaderType.REGISTER_DATA, "carlo", "lol")));
+        printWriter.println(packetsEncoder.encode(new AccessPacket(Packet.HeaderType.REGISTER_DATA, "andrea", "lol")));
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         System.out.println(bufferedReader.readLine());
