@@ -26,7 +26,7 @@ public class PacketsQueue {
     public void enqueuePacket(DispatchablePacket dispatchablePacket) {
         try {
             put(dispatchablePacket);
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             Logger.logError(this, "Error during enqueuing packet.");
         }
     }
@@ -38,7 +38,7 @@ public class PacketsQueue {
     public DispatchablePacket dequeuePacket() {
         try {
             return take();
-        } catch (InterruptedException e) {
+        } catch (Exception e) {
             Logger.logError(this, "Error during dequeuing packet.");
         }
 

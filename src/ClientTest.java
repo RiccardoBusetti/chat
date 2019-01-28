@@ -16,10 +16,14 @@ public class ClientTest {
 
         PacketsEncoder packetsEncoder = new PacketsEncoder();
         PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-        printWriter.println(packetsEncoder.encode(new AccessPacket(Packet.HeaderType.LOGIN_DATA, "jessica", "ciao")));
+        printWriter.println(packetsEncoder.encode(new AccessPacket(Packet.HeaderType.REGISTER_DATA, "carlo", "lol")));
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
         System.out.println(bufferedReader.readLine());
+
+        while (true) {
+
+        }
     }
 
 }

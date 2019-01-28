@@ -112,6 +112,7 @@ public class ConnectionHandler implements Runnable {
             case LOGIN_USER_ALREADY_ONLINE:
             default:
                 accessResultPacket.setAllowed(false);
+                break;
         }
 
         return accessResultPacket;

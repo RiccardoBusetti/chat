@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.*?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:id="usernameLabel" prefHeight="43.0" prefWidth="600.0"
+            xmlns="http://javafx.com/javafx/10.0.1" fx:controller="server.ui.lists.RegisteredUserListViewCell">
+    <children>
+        <Label layoutX="14.0" layoutY="13.0" text="Username" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0"
+               AnchorPane.topAnchor="16.0"/>
+        <Button fx:id="blockUserButton" layoutX="527.0" layoutY="11.0" mnemonicParsing="false" text="Blocca"
+                AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="16.0"/>
+    </children>
+</AnchorPane>
