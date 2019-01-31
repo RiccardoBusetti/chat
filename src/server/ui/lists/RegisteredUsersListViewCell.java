@@ -11,7 +11,7 @@ import server.entities.User;
 
 import java.io.IOException;
 
-public class RegisteredUserListViewCell extends ListCell<Pair<User, Boolean>> {
+public class RegisteredUsersListViewCell extends ListCell<Pair<User, Boolean>> {
 
     @FXML
     Label usernameLabel;
@@ -24,7 +24,7 @@ public class RegisteredUserListViewCell extends ListCell<Pair<User, Boolean>> {
 
         if (item != null && !empty) {
             try {
-                FXMLLoader loader = new FXMLLoader(RegisteredUserListViewCell.class.getResource("RegisteredUserListViewCell.fxml"));
+                FXMLLoader loader = new FXMLLoader(RegisteredUsersListViewCell.class.getResource("RegisteredsUserListViewCell.fxml"));
                 loader.setController(this);
                 AnchorPane rootCellLayout = loader.load();
 
