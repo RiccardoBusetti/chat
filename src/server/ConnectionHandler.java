@@ -66,8 +66,11 @@ public class ConnectionHandler implements Runnable {
 
                 if (accessPacket.getHeaderType() == Packet.HeaderType.LOGIN_DATA) {
                     accessResultPacket = handleLogin(accessPacket);
-                } else {
+                } else if (accessPacket.getHeaderType() == Packet.HeaderType.REGISTER_DATA) {
                     accessResultPacket = handleRegister(accessPacket);
+                } else {
+                    handleAccessError();
+                    break;
                 }
 
                 isAllowed = accessResultPacket.isAllowed();
@@ -79,12 +82,7 @@ public class ConnectionHandler implements Runnable {
                 // Adds the result message to the queue.
                 PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
             } else {
-                ErrorPacket errorPacket = new ErrorPacket(Packet.HeaderType.ERROR_MESSAGE, "You need to register before sending messages.");
-                // Prepares the result of the access.
-                DispatchablePacket dispatchablePacket = new DispatchablePacket();
-                dispatchablePacket.setPacket(errorPacket);
-                // Adds the error message to the queue.
-                PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
+                handleAccessError();
             }
         }
     }
@@ -144,6 +142,16 @@ public class ConnectionHandler implements Runnable {
         }
 
         return accessResultPacket;
+    }
+
+    private void handleAccessError() {
+        ErrorPacket errorPacket = new ErrorPacket(Packet.HeaderType.ERROR_MESSAGE, "You need to authenticate before using the chat.");
+        // Prepares the result of the access.
+        DispatchablePacket dispatchablePacket = new DispatchablePacket();
+        dispatchablePacket.setPacket(errorPacket);
+        dispatchablePacket.addRecipientSocket(clientSocket);
+        // Adds the error message to the queue.
+        PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
     }
 
     // TODO: handle messages.

@@ -28,8 +28,7 @@ public class Main extends Application {
 
     private void loadLayout() {
         try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("ControlPanel.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("ControlPanel.fxml"));
             AnchorPane rootLayout = loader.load();
 
             controlPanelController = loader.getController();

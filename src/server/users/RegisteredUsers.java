@@ -23,7 +23,7 @@ import java.util.List;
 public class RegisteredUsers extends ServiceUsers<User, Boolean> {
     private static RegisteredUsers instance;
 
-    private String filePath = Paths.get(Constants.BASE_DIR, Constants.REGISTERED_USERS_FILE_NAME + Constants.TXT_EXTENSION).toString();
+    private String filePath = Paths.get(Constants.BASE_PROJECT_DIR, Constants.REGISTERED_USERS_FILE_NAME + Constants.TXT_EXTENSION).toString();
 
     private RegisteredUsers() {
 
@@ -63,6 +63,8 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
             blockUserAndRewriteFile(username);
 
             if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
+
+            OnlineUsers.getInstance().removeUser(username);
 
             Logger.logRegistration(this, "User " + username + " blocked.");
         } catch (UserNotFoundException exc) {

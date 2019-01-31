@@ -5,6 +5,7 @@ import server.entities.User;
 import server.exceptions.UserNotFoundException;
 import server.logging.Logger;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +40,14 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
     @Override
     public synchronized void removeUser(String username) {
         try {
-            onlineUsers.remove(searchUserByUsername(username));
+            Pair<User, Socket> user = searchUserByUsername(username);
+            user.getValue().close();
+            onlineUsers.remove(user);
 
             if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
 
             Logger.logConnection(this, "User " + username + " disconnected!");
-        } catch (UserNotFoundException exc) {
+        } catch (UserNotFoundException | IOException exc) {
             Logger.logError(this, exc.getMessage());
         }
     }
