@@ -10,7 +10,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.util.Pair;
 import server.entities.User;
-import server.ui.lists.RegisteredUserListViewCell;
 import server.users.OnlineUsers;
 import server.users.RegisteredUsers;
 

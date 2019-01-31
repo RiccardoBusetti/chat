@@ -5,7 +5,7 @@ package server.constants;
  */
 public class Constants {
     // Files constants.
-    public static final String BASE_DIR = "/Users/riccardobusetti/Desktop/Chat/";
+    public static final String BASE_DIR = System.getProperty("user.dir") + "\\";
     public static final String TXT_EXTENSION = ".txt";
     public static final String COMMA_SEPARATOR = ",";
     public static final String REGISTERED_USERS_FILE_NAME = "registered_users";

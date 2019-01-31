@@ -58,6 +58,13 @@ public class TxtFilesHelper {
     }
 
     private static List<String> getAllLinesOnFile(String fileName) throws IOException {
+        createFileIfNotExists(fileName);
+
         return Files.readAllLines(Paths.get(Constants.BASE_DIR + fileName + Constants.TXT_EXTENSION));
+    }
+
+    private static boolean createFileIfNotExists(String fileName) throws IOException {
+        File file = new File(Constants.BASE_DIR + fileName + Constants.TXT_EXTENSION);
+        return file.createNewFile();
     }
 }
