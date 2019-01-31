@@ -1,11 +1,13 @@
 package server.constants;
 
+import java.nio.file.Paths;
+
 /**
  * Class containing all the constants used in the server.
  */
 public class Constants {
     // Files constants.
-    public static final String BASE_DIR = System.getProperty("user.dir") + "\\";
+    public static final String BASE_DIR = System.getProperty("user.dir");
     public static final String TXT_EXTENSION = ".txt";
     public static final String COMMA_SEPARATOR = ",";
     public static final String REGISTERED_USERS_FILE_NAME = "registered_users";

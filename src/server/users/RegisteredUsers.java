@@ -8,6 +8,7 @@ import server.io.TxtFilesHelper;
 import server.io.TxtUserHelper;
 import server.logging.Logger;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,8 @@ import java.util.List;
 public class RegisteredUsers extends ServiceUsers<User, Boolean> {
     private static RegisteredUsers instance;
 
+    private String filePath = Paths.get(Constants.BASE_DIR, Constants.REGISTERED_USERS_FILE_NAME + Constants.TXT_EXTENSION).toString();
+
     private RegisteredUsers() {
 
     }
@@ -35,7 +38,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
     @Override
     public synchronized void addUser(User user, Boolean information) {
         String encodedUser = TxtUserHelper.encodeUser(user, information);
-        TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, encodedUser);
+        TxtFilesHelper.write(filePath, encodedUser);
 
         if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
 
@@ -69,7 +72,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
 
     @Override
     public synchronized void removeAllUsers() {
-        TxtFilesHelper.clear(Constants.REGISTERED_USERS_FILE_NAME);
+        TxtFilesHelper.clear(filePath);
     }
 
     @Override
@@ -93,11 +96,11 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
         // Removes the user from the registered users.
         registeredUsers.remove(searchUser(username, registeredUsers));
 
-        TxtFilesHelper.clear(Constants.REGISTERED_USERS_FILE_NAME);
+        TxtFilesHelper.clear(filePath);
 
         // Rewrites the file with the user removed.
         for (Pair<User, Boolean> registeredUser : registeredUsers) {
-            TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, TxtUserHelper.encodeUser(registeredUser.getKey(), registeredUser.getValue()));
+            TxtFilesHelper.write(filePath, TxtUserHelper.encodeUser(registeredUser.getKey(), registeredUser.getValue()));
         }
     }
 
@@ -110,11 +113,11 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
         Pair<User, Boolean> blockedUser = new Pair<>(foundUser.getKey(), true);
         registeredUsers.add(blockedUser);
 
-        TxtFilesHelper.clear(Constants.REGISTERED_USERS_FILE_NAME);
+        TxtFilesHelper.clear(filePath);
 
         // Rewrites the file with the user blocked status updated.
         for (Pair<User, Boolean> registeredUser : registeredUsers) {
-            TxtFilesHelper.write(Constants.REGISTERED_USERS_FILE_NAME, TxtUserHelper.encodeUser(registeredUser.getKey(), registeredUser.getValue()));
+            TxtFilesHelper.write(filePath, TxtUserHelper.encodeUser(registeredUser.getKey(), registeredUser.getValue()));
         }
     }
 
@@ -143,7 +146,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
         List<Pair<User, Boolean>> registeredUsers = new ArrayList<>();
 
         // Converts
-        for (String line : TxtFilesHelper.getAllLines(Constants.REGISTERED_USERS_FILE_NAME)) {
+        for (String line : TxtFilesHelper.getAllLines(filePath)) {
             registeredUsers.add(TxtUserHelper.decodeUser(line));
         }
 
