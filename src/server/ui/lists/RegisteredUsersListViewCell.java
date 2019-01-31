@@ -8,6 +8,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Pair;
 import server.entities.User;
+import server.users.RegisteredUsers;
 
 import java.io.IOException;
 
@@ -30,6 +31,10 @@ public class RegisteredUsersListViewCell extends ListCell<Pair<User, Boolean>> {
 
                 usernameLabel.setText(item.getKey().getUsername());
                 blockUserButton.setText(item.getValue() ? "Sblocca" : "Blocca");
+
+                if (!item.getValue()) {
+                    blockUserButton.setOnAction(event -> RegisteredUsers.getInstance().blockUser(item.getKey().getUsername()));
+                }
 
                 setText(null);
                 setGraphic(rootCellLayout);

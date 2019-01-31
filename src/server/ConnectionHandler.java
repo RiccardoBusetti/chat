@@ -106,6 +106,7 @@ public class ConnectionHandler implements Runnable {
                 OnlineUsers.getInstance().addUser(user, clientSocket);
                 break;
             case LOGIN_NOT_EXISTING_USER:
+            case LOGIN_BLOCKED_USER:
             case LOGIN_WRONG_CREDENTIALS:
             case LOGIN_USER_ALREADY_ONLINE:
             default:
@@ -135,6 +136,7 @@ public class ConnectionHandler implements Runnable {
                 // Now the user is online, so we will add it to the online users list.
                 OnlineUsers.getInstance().addUser(user, clientSocket);
                 break;
+            case REGISTRATION_BLOCKED_USER:
             case REGISTRATION_USER_ALREADY_ONLINE:
             default:
                 accessResultPacket.setAllowed(false);
