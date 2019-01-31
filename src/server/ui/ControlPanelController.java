@@ -10,6 +10,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.util.Pair;
 import server.entities.User;
+import server.ui.lists.RegisteredUserListViewCell;
 import server.users.OnlineUsers;
 import server.users.RegisteredUsers;
 
@@ -18,15 +19,15 @@ import java.net.Socket;
 public class ControlPanelController {
 
     @FXML
-    TextField serverPortTextField;
+    private TextField serverPortTextField;
     @FXML
-    Button serverActionButton;
+    private Button serverActionButton;
     @FXML
-    TabPane usersTabPane;
+    private TabPane usersTabPane;
     @FXML
-    ListView<Pair<User, Socket>> onlineUsersListView;
+    private ListView<Pair<User, Socket>> onlineUsersListView;
     @FXML
-    ListView<Pair<User, Boolean>> registeredUsersListView;
+    private ListView<Pair<User, Boolean>> registeredUsersListView;
 
     private Main main;
     private int port = 8888;
@@ -51,7 +52,7 @@ public class ControlPanelController {
         onlineUsersListView.setItems(onlineUsers);
 
         registeredUsersListView.setItems(registeredUsers);
-        //registeredUsersListView.setCellFactory(param -> new RegisteredUserListViewCell());
+        registeredUsersListView.setCellFactory(param -> new RegisteredUserListViewCell());
 
         updateUI();
     }
