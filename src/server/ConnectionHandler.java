@@ -43,6 +43,7 @@ public class ConnectionHandler implements Runnable {
 
             listen();
         } catch (IOException exc) {
+            // TODO: disconnect the client if the socket throws an error.
             Logger.logError(this, "Error while handling the connection.");
         }
     }
