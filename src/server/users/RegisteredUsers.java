@@ -60,13 +60,25 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
 
     public synchronized void blockUser(String username) {
         try {
-            blockUserAndRewriteFile(username);
+            changeBlockedStatusOnFile(username, true);
 
             if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
 
             OnlineUsers.getInstance().removeUser(username);
 
             Logger.logRegistration(this, "User " + username + " blocked.");
+        } catch (UserNotFoundException exc) {
+            Logger.logError(this, exc.getMessage());
+        }
+    }
+
+    public synchronized void unblockUser(String username) {
+        try {
+            changeBlockedStatusOnFile(username, false);
+
+            if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
+
+            Logger.logRegistration(this, "User " + username + " unblocked.");
         } catch (UserNotFoundException exc) {
             Logger.logError(this, exc.getMessage());
         }
@@ -106,13 +118,13 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
         }
     }
 
-    private void blockUserAndRewriteFile(String username) throws UserNotFoundException {
+    private void changeBlockedStatusOnFile(String username, boolean isBlocked) throws UserNotFoundException {
         List<Pair<User, Boolean>> registeredUsers = getAllUsers();
 
         // Updates the user status from not blocked to blocked.
         Pair<User, Boolean> foundUser = searchUser(username, registeredUsers);
         registeredUsers.remove(foundUser);
-        Pair<User, Boolean> blockedUser = new Pair<>(foundUser.getKey(), true);
+        Pair<User, Boolean> blockedUser = new Pair<>(foundUser.getKey(), isBlocked);
         registeredUsers.add(blockedUser);
 
         TxtFilesHelper.clear(filePath);

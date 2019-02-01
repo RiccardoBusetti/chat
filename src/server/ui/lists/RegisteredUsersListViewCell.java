@@ -32,7 +32,9 @@ public class RegisteredUsersListViewCell extends ListCell<Pair<User, Boolean>> {
                 usernameLabel.setText(item.getKey().getUsername());
                 blockUserButton.setText(item.getValue() ? "Sblocca" : "Blocca");
 
-                if (!item.getValue()) {
+                if (item.getValue()) {
+                    blockUserButton.setOnAction(event -> RegisteredUsers.getInstance().unblockUser(item.getKey().getUsername()));
+                } else {
                     blockUserButton.setOnAction(event -> RegisteredUsers.getInstance().blockUser(item.getKey().getUsername()));
                 }
 
