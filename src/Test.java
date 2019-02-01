@@ -2,9 +2,8 @@ import server.entities.packets.OnlineUsersPacket;
 import server.entities.packets.Packet;
 import server.packets.PacketsDecoder;
 import server.packets.PacketsEncoder;
-import server.users.OnlineUsers;
 
-import java.nio.file.Paths;
+import java.time.LocalDateTime;
 
 public class Test {
 
@@ -13,6 +12,8 @@ public class Test {
         OnlineUsersPacket onlineUsersPacket = new OnlineUsersPacket(Packet.HeaderType.ONLINE_USERS_DATA);
         onlineUsersPacket.addUser("riccardo");
         onlineUsersPacket.addUser("paola");
+
+        System.out.println(LocalDateTime.now().toString());
 
         String encodedPacket = packetsEncoder.encode(onlineUsersPacket);
 

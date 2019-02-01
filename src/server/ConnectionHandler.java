@@ -1,8 +1,11 @@
 package server;
 
+import javafx.util.Pair;
 import server.access.AccessHelper;
+import server.constants.Constants;
 import server.entities.User;
 import server.entities.packets.*;
+import server.exceptions.UserNotFoundException;
 import server.logging.Logger;
 import server.packets.PacketsDecoder;
 import server.packets.PacketsQueue;
@@ -12,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.time.LocalDateTime;
 
 /**
  * Class responsible of handling each connection on a different thread
@@ -21,6 +25,7 @@ public class ConnectionHandler implements Runnable {
 
     private User user;
     private Socket clientSocket;
+    private boolean stop = false;
 
     public ConnectionHandler(Socket clientSocket) {
         this.user = null;
@@ -54,35 +59,42 @@ public class ConnectionHandler implements Runnable {
         boolean isAllowed = false;
         PacketsDecoder packetsDecoder = new PacketsDecoder();
 
-        while (!isAllowed) {
-            Packet packet = packetsDecoder.decode(bufferedReader.readLine());
+        while (!isAllowed || !stop) {
+            String inputString = bufferedReader.readLine();
+            System.out.println(inputString);
 
-            // We need to check if the packet is an access packet, because
-            // we must perform the login/registration before letting the user
-            // send messages.
-            if (packet instanceof AccessPacket) {
-                AccessPacket accessPacket = (AccessPacket) packet;
-                AccessResultPacket accessResultPacket;
+            if (inputString != null) {
+                Packet packet = packetsDecoder.decode(inputString);
 
-                if (accessPacket.getHeaderType() == Packet.HeaderType.LOGIN_DATA) {
-                    accessResultPacket = handleLogin(accessPacket);
-                } else if (accessPacket.getHeaderType() == Packet.HeaderType.REGISTER_DATA) {
-                    accessResultPacket = handleRegister(accessPacket);
+                // We need to check if the packet is an access packet, because
+                // we must perform the login/registration before letting the user
+                // send messages.
+                if (packet instanceof AccessPacket) {
+                    AccessPacket accessPacket = (AccessPacket) packet;
+                    AccessResultPacket accessResultPacket;
+
+                    if (accessPacket.getHeaderType() == Packet.HeaderType.LOGIN_DATA) {
+                        accessResultPacket = handleLogin(accessPacket);
+                    } else if (accessPacket.getHeaderType() == Packet.HeaderType.REGISTER_DATA) {
+                        accessResultPacket = handleRegister(accessPacket);
+                    } else {
+                        sendErrorMessage("Prima di inviare messaggi devi fare l'accesso.");
+                        break;
+                    }
+
+                    isAllowed = accessResultPacket.isAllowed();
+
+                    // Prepares the result of the access.
+                    DispatchablePacket dispatchablePacket = new DispatchablePacket();
+                    dispatchablePacket.addRecipientSocket(clientSocket);
+                    dispatchablePacket.setPacket(accessResultPacket);
+                    // Adds the result message to the queue.
+                    PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
                 } else {
-                    handleAccessError();
-                    break;
+                    sendErrorMessage("Prima di inviare messaggi devi fare l'accesso.");
                 }
-
-                isAllowed = accessResultPacket.isAllowed();
-
-                // Prepares the result of the access.
-                DispatchablePacket dispatchablePacket = new DispatchablePacket();
-                dispatchablePacket.setPacket(accessResultPacket);
-                dispatchablePacket.addRecipientSocket(clientSocket);
-                // Adds the result message to the queue.
-                PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
             } else {
-                handleAccessError();
+                disconnectClient();
             }
         }
     }
@@ -146,23 +158,77 @@ public class ConnectionHandler implements Runnable {
         return accessResultPacket;
     }
 
-    private void handleAccessError() {
-        ErrorPacket errorPacket = new ErrorPacket(Packet.HeaderType.ERROR_MESSAGE, "You need to authenticate before using the chat.");
-        // Prepares the result of the access.
-        DispatchablePacket dispatchablePacket = new DispatchablePacket();
-        dispatchablePacket.setPacket(errorPacket);
-        dispatchablePacket.addRecipientSocket(clientSocket);
-        // Adds the error message to the queue.
-        PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
+    private void handleMessages(BufferedReader bufferedReader) throws IOException {
+        PacketsDecoder packetsDecoder = new PacketsDecoder();
+
+        while (!stop) {
+            String inputString = bufferedReader.readLine();
+
+            if (inputString != null) {
+                Packet packet = packetsDecoder.decode(bufferedReader.readLine());
+
+                // We need to check if the packet is a message and depending
+                // on its type we are going to handle it differently.
+                if (packet instanceof UnicastMessagePacket) {
+                    UnicastMessagePacket unicastMessagePacket = (UnicastMessagePacket) packet;
+
+                    handleUnicastMessage(unicastMessagePacket);
+                } else if (packet instanceof MulticastMessagePacket) {
+                    MulticastMessagePacket multicastMessagePacket = (MulticastMessagePacket) packet;
+
+                    handleMulticastMessage(multicastMessagePacket);
+                } else {
+                    sendErrorMessage("Il messaggio da te inviato ha un formato errato, riprova.");
+                }
+            } else {
+                disconnectClient();
+            }
+        }
     }
 
-    // TODO: handle messages.
-    private void handleMessages(BufferedReader bufferedReader) {
+    private void handleUnicastMessage(UnicastMessagePacket unicastMessagePacket) {
+        try {
+            Pair<User, Socket> recipientUser = OnlineUsers.getInstance().getUserByUsername(unicastMessagePacket.getRecipientUsername());
+        } catch (UserNotFoundException exc) {
+            sendMessageResult(false);
+        }
+    }
+
+    private void handleMulticastMessage(MulticastMessagePacket multicastMessagePacket) {
 
     }
 
     // TODO: implement checks on the readline to see if the client is still connected or if it is disconnected or if it is sending the END message
     private boolean checkConnection() {
         return false;
+    }
+
+    private void sendMessageResult(boolean isReceived) {
+        MessageResultPacket messageResultPacket = new MessageResultPacket(Packet.HeaderType.MESSAGE_RESULT,
+                isReceived ? LocalDateTime.now().toString() : Constants.NO_DATE);
+        // Prepares the result of the message.
+        DispatchablePacket dispatchablePacket = new DispatchablePacket();
+        dispatchablePacket.addRecipientSocket(clientSocket);
+        dispatchablePacket.setPacket(messageResultPacket);
+        // Adds the message result to the queue.
+        PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
+    }
+
+    private void sendErrorMessage(String errorMessage) {
+        ErrorPacket errorPacket = new ErrorPacket(Packet.HeaderType.ERROR_MESSAGE, errorMessage);
+        // Prepares the result of the access.
+        DispatchablePacket dispatchablePacket = new DispatchablePacket();
+        dispatchablePacket.addRecipientSocket(clientSocket);
+        dispatchablePacket.setPacket(errorPacket);
+        // Adds the error message to the queue.
+        PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
+    }
+
+    private void disconnectClient() throws IOException {
+        if (user != null && user.getUsername() != null) {
+            OnlineUsers.getInstance().removeUser(user.getUsername());
+        }
+        clientSocket.close();
+        stop = true;
     }
 }
