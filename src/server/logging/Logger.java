@@ -1,7 +1,8 @@
 package server.logging;
 
 /**
- * Class responsible of providing custom server.logging for the server.
+ * Class responsible of providing a logging system for the server, with colors
+ * in the console in order to emphasize the different things happening.
  */
 public class Logger {
     public static void logStatus(Object o, String statusMessage) {

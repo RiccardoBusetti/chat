@@ -6,7 +6,10 @@ import server.entities.packets.Packet;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PacketsHeaderHelper {
+/**
+ * Class used to map the header with a specific string value and vice-versa.
+ */
+/* package */ class PacketsHeaderHelper {
 
     private Map<String, Packet.HeaderType> headersMap;
     private Map<Packet.HeaderType, String> headersInverseMap;

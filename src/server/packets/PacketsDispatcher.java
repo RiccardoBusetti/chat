@@ -21,6 +21,8 @@ public class PacketsDispatcher implements Runnable {
     }
 
     private void checkForNewPackets() {
+        // Continues to loop to check for new packets
+        // that need to be dispatched.
         while (true) {
             Logger.logStatus(this, "Waiting for new packets in the queue...");
 
@@ -29,7 +31,8 @@ public class PacketsDispatcher implements Runnable {
     }
 
     private void handlePacketDispatching() {
-        DispatchablePacket dispatchablePacket = PacketsQueue.getInstance().dequeuePacket();
+        DispatchablePacket dispatchablePacket = PacketsQueue.getInstance().getPacketToSend();
+        // Getting the data from the packet.
         Packet packet = dispatchablePacket.getPacket();
         List<Socket> recipientsSockets = dispatchablePacket.getRecipientsSockets();
 
@@ -51,10 +54,14 @@ public class PacketsDispatcher implements Runnable {
         PacketsEncoder packetsEncoder = new PacketsEncoder();
         String encodedPacket = packetsEncoder.encode(packet);
 
+        // Looping on every recipient socket and we are going
+        // to send to each of them the packet.
         for (Socket recipientSocket : recipientsSockets) {
             PrintWriter printWriter = new PrintWriter(recipientSocket.getOutputStream(), true);
             printWriter.println(encodedPacket);
         }
+
+        Logger.logPacket(this, packet + " dispatched.");
     }
 
 }

@@ -12,6 +12,14 @@ import server.users.RegisteredUsers;
  */
 public class AccessHelper {
 
+    /**
+     * Performs the registration of the user inside of the txt file,
+     * used as a database.
+     *
+     * @param username username of the user.
+     * @param password password of the user.
+     * @return the result of the registration.
+     */
     public static RegistrationResult register(String username, String password) {
         RegistrationResult registrationResult;
 
@@ -32,6 +40,7 @@ public class AccessHelper {
             registrationResult = RegistrationResult.REGISTRATION_SUCCESSFUL;
         }
 
+        // If the user is already online we will stop the registration.
         if (isAlreadyOnline(username)) {
             registrationResult = RegistrationResult.REGISTRATION_USER_ALREADY_ONLINE;
         }
@@ -39,6 +48,14 @@ public class AccessHelper {
         return registrationResult;
     }
 
+    /**
+     * Performs the login of the user by looking at the txt file,
+     * used as a database.
+     *
+     * @param username username of the user.
+     * @param password password of the user.
+     * @return the result of the login.
+     */
     public static LoginResult login(String username, String password) {
         LoginResult loginResult;
 
@@ -60,6 +77,7 @@ public class AccessHelper {
             loginResult = LoginResult.LOGIN_NOT_EXISTING_USER;
         }
 
+        // If the user is already online we will stop the login.
         if (isAlreadyOnline(username)) {
             loginResult = LoginResult.LOGIN_USER_ALREADY_ONLINE;
         }
@@ -67,10 +85,18 @@ public class AccessHelper {
         return loginResult;
     }
 
+    /**
+     * Checks if a specific user is online.
+     *
+     * @param username username of the user we want to see the status.
+     * @return true if the user is online false if not.
+     */
     private static boolean isAlreadyOnline(String username) {
         boolean isAlreadyOnline;
 
         try {
+            // Tries to find if the username exists in the current
+            // online users.
             OnlineUsers.getInstance().getUserByUsername(username);
 
             isAlreadyOnline = true;
@@ -81,6 +107,10 @@ public class AccessHelper {
         return isAlreadyOnline;
     }
 
+    /**
+     * Enum representing the possible results that can
+     * happen during the registration.
+     */
     public enum RegistrationResult {
         REGISTRATION_SUCCESSFUL,
         REGISTRATION_ALREADY_EXISTING_USER,
@@ -88,6 +118,10 @@ public class AccessHelper {
         REGISTRATION_USER_ALREADY_ONLINE
     }
 
+    /**
+     * Enum representing the possible results that can
+     * happen during the login.
+     */
     public enum LoginResult {
         LOGIN_SUCCESSFUL,
         LOGIN_NOT_EXISTING_USER,
