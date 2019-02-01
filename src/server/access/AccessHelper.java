@@ -17,9 +17,14 @@ public class AccessHelper {
 
         try {
             // Checking if the user is registered.
-            RegisteredUsers.getInstance().getUserByUsername(username);
+            Pair<User, Boolean> foundRegisteredUser = RegisteredUsers.getInstance().getUserByUsername(username);
 
-            registrationResult = RegistrationResult.REGISTRATION_ALREADY_EXISTING_USER;
+            // Checking it the user is blocked.
+            if (foundRegisteredUser.getValue()) {
+                registrationResult = RegistrationResult.REGISTRATION_BLOCKED_USER;
+            } else {
+                registrationResult = RegistrationResult.REGISTRATION_ALREADY_EXISTING_USER;
+            }
         } catch (UserNotFoundException exc) {
             // The user is not registered so we are going to register it.
             RegisteredUsers.getInstance().addUser(new User(username, password), false);
@@ -43,7 +48,11 @@ public class AccessHelper {
 
             // Checking if the user password is correct and if the user is not banned.
             if (foundRegisteredUser.getKey().getPassword().equals(password) && !foundRegisteredUser.getValue()) {
-                loginResult = LoginResult.LOGIN_SUCCESSFUL;
+                if (foundRegisteredUser.getValue()) {
+                    loginResult = LoginResult.LOGIN_BLOCKED_USER;
+                } else {
+                    loginResult = LoginResult.LOGIN_SUCCESSFUL;
+                }
             } else {
                 loginResult = LoginResult.LOGIN_WRONG_CREDENTIALS;
             }
@@ -75,12 +84,14 @@ public class AccessHelper {
     public enum RegistrationResult {
         REGISTRATION_SUCCESSFUL,
         REGISTRATION_ALREADY_EXISTING_USER,
+        REGISTRATION_BLOCKED_USER,
         REGISTRATION_USER_ALREADY_ONLINE
     }
 
     public enum LoginResult {
         LOGIN_SUCCESSFUL,
         LOGIN_NOT_EXISTING_USER,
+        LOGIN_BLOCKED_USER,
         LOGIN_WRONG_CREDENTIALS,
         LOGIN_USER_ALREADY_ONLINE
     }

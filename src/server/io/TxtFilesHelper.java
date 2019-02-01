@@ -15,41 +15,41 @@ import java.util.List;
  * Class containing helper method to perform operations on .txt files.
  */
 public class TxtFilesHelper {
-    public static void write(String fileName, String line) {
+    public static void write(String filePath, String line) {
         try {
-            writeOnFile(fileName, line);
+            writeOnFile(filePath, line);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void writeOnFile(String fileName, String line) throws IOException {
-        File file = new File(Constants.BASE_DIR + fileName + Constants.TXT_EXTENSION);
+    private static void writeOnFile(String filePath, String line) throws IOException {
+        File file = new File(filePath);
         PrintWriter printWriter = new PrintWriter(new FileOutputStream(file, true));
 
         printWriter.println(line);
         printWriter.close();
     }
 
-    public static void clear(String fileName) {
+    public static void clear(String filePath) {
         try {
-            clearOnFile(fileName);
+            clearOnFile(filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private static void clearOnFile(String fileName) throws IOException {
-        File file = new File(Constants.BASE_DIR + fileName + Constants.TXT_EXTENSION);
+    private static void clearOnFile(String filePath) throws IOException {
+        File file = new File(filePath);
         PrintWriter printWriter = new PrintWriter(new FileOutputStream(file, false));
 
         printWriter.print(Constants.EMPTY_FILE);
         printWriter.close();
     }
 
-    public static List<String> getAllLines(String fileName) {
+    public static List<String> getAllLines(String filePath) {
         try {
-            return getAllLinesOnFile(fileName);
+            return getAllLinesOnFile(filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -57,14 +57,14 @@ public class TxtFilesHelper {
         return Collections.emptyList();
     }
 
-    private static List<String> getAllLinesOnFile(String fileName) throws IOException {
-        createFileIfNotExists(fileName);
+    private static List<String> getAllLinesOnFile(String filePath) throws IOException {
+        createFileIfNotExists(filePath);
 
-        return Files.readAllLines(Paths.get(Constants.BASE_DIR + fileName + Constants.TXT_EXTENSION));
+        return Files.readAllLines(Paths.get(filePath));
     }
 
-    private static boolean createFileIfNotExists(String fileName) throws IOException {
-        File file = new File(Constants.BASE_DIR + fileName + Constants.TXT_EXTENSION);
+    private static boolean createFileIfNotExists(String filePath) throws IOException {
+        File file = new File(filePath);
         return file.createNewFile();
     }
 }

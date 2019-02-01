@@ -10,7 +10,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.util.Pair;
 import server.entities.User;
-import server.ui.lists.RegisteredUserListViewCell;
+import server.ui.lists.OnlineUsersListViewCell;
+import server.ui.lists.RegisteredUsersListViewCell;
 import server.users.OnlineUsers;
 import server.users.RegisteredUsers;
 
@@ -19,15 +20,15 @@ import java.net.Socket;
 public class ControlPanelController {
 
     @FXML
-    private TextField serverPortTextField;
+    TextField serverPortTextField;
     @FXML
-    private Button serverActionButton;
+    Button serverActionButton;
     @FXML
-    private TabPane usersTabPane;
+    TabPane usersTabPane;
     @FXML
-    private ListView<Pair<User, Socket>> onlineUsersListView;
+    ListView<Pair<User, Socket>> onlineUsersListView;
     @FXML
-    private ListView<Pair<User, Boolean>> registeredUsersListView;
+    ListView<Pair<User, Boolean>> registeredUsersListView;
 
     private Main main;
     private int port = 8888;
@@ -47,12 +48,12 @@ public class ControlPanelController {
         addListeners();
     }
 
-    // TODO: implement custom cells for each list.
     private void setUpUI() {
         onlineUsersListView.setItems(onlineUsers);
+        onlineUsersListView.setCellFactory(param -> new OnlineUsersListViewCell());
 
         registeredUsersListView.setItems(registeredUsers);
-        registeredUsersListView.setCellFactory(param -> new RegisteredUserListViewCell());
+        registeredUsersListView.setCellFactory(param -> new RegisteredUsersListViewCell());
 
         updateUI();
     }
@@ -102,15 +103,17 @@ public class ControlPanelController {
 
         OnlineUsers.getInstance().observe(users -> {
             Platform.runLater(() -> {
-                onlineUsers.clear();
-                onlineUsers.addAll(users);
+                onlineUsersListView.getItems().clear();
+                System.out.println("Online users " + users.size());
+                onlineUsersListView.getItems().addAll(users);
             });
         });
 
         RegisteredUsers.getInstance().observe(users -> {
             Platform.runLater(() -> {
-                registeredUsers.clear();
-                registeredUsers.addAll(users);
+                registeredUsersListView.getItems().clear();
+                System.out.println("Registered users " + users.size());
+                registeredUsersListView.getItems().addAll(users);
             });
         });
     }
