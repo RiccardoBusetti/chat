@@ -19,6 +19,8 @@ public class Constants {
     public static final String REGISTER_RESULT = "RegisterResult";
     public static final String UNICAST_MESSAGE = "UniMsg";
     public static final String MULTICAST_MESSAGE = "MultiMsg";
+    public static final String MESSAGE_RESULT = "MsgResult";
+    public static final String ONLINE_USERS_DATA = "OnlineUsers";
     public static final String BAN_STATUS = "BanStatus";
     public static final String ERROR_MESSAGE = "Error";
 }

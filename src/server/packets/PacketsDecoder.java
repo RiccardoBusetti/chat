@@ -42,11 +42,17 @@ public class PacketsDecoder {
             case REGISTER_RESULT:
                 decodedPacket = decodeAccessResult(packetHeader, packetData);
                 break;
-            case UNICAST_MESSAGE:
-                decodedPacket = decodeUnicastMessage(packetHeader, packetData);
+            case UNICAST_MESSAGE_DATA:
+                decodedPacket = decodeUnicastMessageData(packetHeader, packetData);
                 break;
-            case MULTICAST_MESSAGE:
-                decodedPacket = decodeMulticastMessage(packetHeader, packetData);
+            case MULTICAST_MESSAGE_DATA:
+                decodedPacket = decodeMulticastMessageData(packetHeader, packetData);
+                break;
+            case MESSAGE_RESULT:
+                decodedPacket = decodeMessageResult(packetHeader, packetData);
+                break;
+            case ONLINE_USERS_DATA:
+                decodedPacket = decodeOnlineUsersData(packetHeader, packetData);
                 break;
             case BAN_STATUS:
                 decodedPacket = decodeBanStatus(packetHeader, packetData);
@@ -90,7 +96,7 @@ public class PacketsDecoder {
      * Decodes the unicast message packet that has the following semantics:
      * [header,sender,recipient,content].
      */
-    private UnicastMessagePacket decodeUnicastMessage(Packet.HeaderType packetHeader, String[] packetData) {
+    private UnicastMessagePacket decodeUnicastMessageData(Packet.HeaderType packetHeader, String[] packetData) {
         UnicastMessagePacket unicastMessagePacket = new UnicastMessagePacket();
         unicastMessagePacket.setHeaderType(packetHeader);
         unicastMessagePacket.setSenderUsername(packetData[1]);
@@ -104,13 +110,40 @@ public class PacketsDecoder {
      * Decodes the multicast message packet that has the following semantics:
      * [header,sender,content].
      */
-    private MulticastMessagePacket decodeMulticastMessage(Packet.HeaderType packetHeader, String[] packetData) {
+    private MulticastMessagePacket decodeMulticastMessageData(Packet.HeaderType packetHeader, String[] packetData) {
         MulticastMessagePacket multicastMessagePacket = new MulticastMessagePacket();
         multicastMessagePacket.setHeaderType(packetHeader);
         multicastMessagePacket.setSenderUsername(packetData[1]);
         multicastMessagePacket.setContent(packetData[2]);
 
         return multicastMessagePacket;
+    }
+
+    /**
+     * Decodes the message result packet that has the following semantics:
+     * [header,receiveDate].
+     */
+    private MessageResultPacket decodeMessageResult(Packet.HeaderType packetHeader, String[] packetData) {
+        MessageResultPacket messageResultPacket = new MessageResultPacket();
+        messageResultPacket.setHeaderType(packetHeader);
+        messageResultPacket.setReceiveDate(packetData[1]);
+
+        return messageResultPacket;
+    }
+
+    /**
+     * Decodes the online users packet that has the following semantics:
+     * [header,usersList].
+     */
+    private OnlineUsersPacket decodeOnlineUsersData(Packet.HeaderType packetHeader, String[] packetData) {
+        OnlineUsersPacket onlineUsersPacket = new OnlineUsersPacket();
+        String[] users = packetData[1].split(Constants.COMMA_SEPARATOR);
+
+        for (String user : users) {
+            onlineUsersPacket.addUser(user);
+        }
+
+        return onlineUsersPacket;
     }
 
     /**

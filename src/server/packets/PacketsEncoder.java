@@ -14,6 +14,8 @@ import java.util.List;
 public class PacketsEncoder {
     public String encode(Packet packet) {
         try {
+            Logger.logStatus(this, "Decoding " + packet.getHeaderType());
+
             return encodePacket(packet);
         } catch (MalformedPacketException exc) {
             Logger.logError(this, exc.getMessage());
@@ -43,11 +45,17 @@ public class PacketsEncoder {
             case REGISTER_RESULT:
                 encodeAccessResult(stringsToEncode, (AccessResultPacket) packet);
                 break;
-            case UNICAST_MESSAGE:
-                encodeUnicastMessage(stringsToEncode, (UnicastMessagePacket) packet);
+            case UNICAST_MESSAGE_DATA:
+                encodeUnicastMessageData(stringsToEncode, (UnicastMessagePacket) packet);
                 break;
-            case MULTICAST_MESSAGE:
-                encodeMulticastMessage(stringsToEncode, (MulticastMessagePacket) packet);
+            case MULTICAST_MESSAGE_DATA:
+                encodeMulticastMessageData(stringsToEncode, (MulticastMessagePacket) packet);
+                break;
+            case MESSAGE_RESULT:
+                encodeMessageResult(stringsToEncode, (MessageResultPacket) packet);
+                break;
+            case ONLINE_USERS_DATA:
+                encodeOnlineUsersData(stringsToEncode, (OnlineUsersPacket) packet);
                 break;
             case BAN_STATUS:
                 encodeBanStatus(stringsToEncode, (BanPacket) packet);
@@ -81,7 +89,7 @@ public class PacketsEncoder {
      * Encodes the unicast message packet with the following semantics:
      * [header,sender,recipient,content].
      */
-    private void encodeUnicastMessage(List<String> stringsToEncode, UnicastMessagePacket unicastMessagePacket) {
+    private void encodeUnicastMessageData(List<String> stringsToEncode, UnicastMessagePacket unicastMessagePacket) {
         stringsToEncode.add(unicastMessagePacket.getSenderUsername());
         stringsToEncode.add(unicastMessagePacket.getRecipientUsername());
         stringsToEncode.add(unicastMessagePacket.getContent());
@@ -91,9 +99,32 @@ public class PacketsEncoder {
      * Encodes the multicast message packet with the following semantics:
      * [header,sender,content].
      */
-    private void encodeMulticastMessage(List<String> stringsToEncode, MulticastMessagePacket multicastMessagePacket) {
+    private void encodeMulticastMessageData(List<String> stringsToEncode, MulticastMessagePacket multicastMessagePacket) {
         stringsToEncode.add(multicastMessagePacket.getSenderUsername());
         stringsToEncode.add(multicastMessagePacket.getContent());
+    }
+
+    /**
+     * Encodes the message result packet with the following semantics:
+     * [header,receiveDate].
+     */
+    private void encodeMessageResult(List<String> stringsToEncode, MessageResultPacket messageResultPacket) {
+        stringsToEncode.add(messageResultPacket.getReceiveDate());
+    }
+
+    /**
+     * Encodes the online users packet with the following semantics:
+     * [header,usersList].
+     */
+    private void encodeOnlineUsersData(List<String> stringsToEncode, OnlineUsersPacket onlineUsersPacket) {
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < onlineUsersPacket.getUsers().size(); i++) {
+            stringBuilder.append(onlineUsersPacket.getUsers().get(i));
+            if (i < onlineUsersPacket.getUsers().size() - 1) stringBuilder.append(Constants.COMMA_SEPARATOR);
+        }
+
+        stringsToEncode.add(stringBuilder.toString());
     }
 
     /**

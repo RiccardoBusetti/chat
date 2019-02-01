@@ -26,8 +26,10 @@ public class Packet {
         LOGIN_RESULT,
         REGISTER_DATA,
         REGISTER_RESULT,
-        UNICAST_MESSAGE,
-        MULTICAST_MESSAGE,
+        UNICAST_MESSAGE_DATA,
+        MULTICAST_MESSAGE_DATA,
+        MESSAGE_RESULT,
+        ONLINE_USERS_DATA,
         BAN_STATUS,
         ERROR_MESSAGE,
         EMPTY_PACKET
