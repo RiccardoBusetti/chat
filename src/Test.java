@@ -1,27 +1,33 @@
-import server.entities.packets.OnlineUsersPacket;
+import server.entities.packets.AccessPacket;
 import server.entities.packets.Packet;
-import server.packets.PacketsDecoder;
 import server.packets.PacketsEncoder;
 
-import java.time.LocalDateTime;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
 
 public class Test {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        Socket clientSocket = new Socket(InetAddress.getLocalHost(), 8888);
+
         PacketsEncoder packetsEncoder = new PacketsEncoder();
-        OnlineUsersPacket onlineUsersPacket = new OnlineUsersPacket(Packet.HeaderType.ONLINE_USERS_DATA);
-        onlineUsersPacket.addUser("riccardo");
-        onlineUsersPacket.addUser("paola");
+        PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+        printWriter.println(packetsEncoder.encode(new AccessPacket(Packet.HeaderType.REGISTER_DATA, "riccardo", "12345")));
 
-        System.out.println(LocalDateTime.now().toString());
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-        String encodedPacket = packetsEncoder.encode(onlineUsersPacket);
-
-        System.out.println(encodedPacket);
-
-        PacketsDecoder packetsDecoder = new PacketsDecoder();
-        OnlineUsersPacket packet = (OnlineUsersPacket) packetsDecoder.decode(encodedPacket);
-        System.out.println(packet.getUsers().size());
+        while (true) {
+            String line = bufferedReader.readLine();
+            if (line != null) {
+                System.out.println(line);
+            } else {
+                break;
+            }
+        }
     }
 
 }

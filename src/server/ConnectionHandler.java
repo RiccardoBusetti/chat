@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class responsible of handling each connection on a different thread
@@ -43,8 +45,8 @@ public class ConnectionHandler implements Runnable {
 
             listen();
         } catch (IOException exc) {
-            // TODO: disconnect the client if the socket throws an error.
-            Logger.logError(this, "Error while handling the connection.");
+            Logger.logError(this, "Error while handling the connection: " + exc.getMessage());
+            disconnectClient();
         }
     }
 
@@ -60,7 +62,7 @@ public class ConnectionHandler implements Runnable {
         boolean isAllowed = false;
         PacketsDecoder packetsDecoder = new PacketsDecoder();
 
-        while (!isAllowed || !stop) {
+        while (!isAllowed && !stop) {
             String inputString = bufferedReader.readLine();
             System.out.println(inputString);
 
@@ -103,7 +105,7 @@ public class ConnectionHandler implements Runnable {
     private AccessResultPacket handleLogin(AccessPacket accessPacket) {
         Logger.logStatus(this, "Handling login with the client " + clientSocket.getRemoteSocketAddress());
 
-        User user = new User();
+        user = new User();
         user.setUsername(accessPacket.getUsername());
         user.setPassword(accessPacket.getPassword());
 
@@ -133,7 +135,7 @@ public class ConnectionHandler implements Runnable {
     private AccessResultPacket handleRegister(AccessPacket accessPacket) {
         Logger.logStatus(this, "Handling registration with the client " + clientSocket.getRemoteSocketAddress());
 
-        User user = new User();
+        user = new User();
         user.setUsername(accessPacket.getUsername());
         user.setPassword(accessPacket.getPassword());
 
@@ -166,7 +168,7 @@ public class ConnectionHandler implements Runnable {
             String inputString = bufferedReader.readLine();
 
             if (inputString != null) {
-                Packet packet = packetsDecoder.decode(bufferedReader.readLine());
+                Packet packet = packetsDecoder.decode(inputString);
 
                 // We need to check if the packet is a message and depending
                 // on its type we are going to handle it differently.
@@ -190,18 +192,42 @@ public class ConnectionHandler implements Runnable {
     private void handleUnicastMessage(UnicastMessagePacket unicastMessagePacket) {
         try {
             Pair<User, Socket> recipientUser = OnlineUsers.getInstance().getUserByUsername(unicastMessagePacket.getRecipientUsername());
+
+            // Creating the dispatchable packet in order to send the message
+            // to the other client.
+            DispatchablePacket dispatchablePacket = new DispatchablePacket();
+            dispatchablePacket.addRecipientSocket(recipientUser.getValue());
+            dispatchablePacket.setPacket(unicastMessagePacket);
+            // Adds the message result to the queue.
+            PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
+            // Notifies the sender that the message has been sent.
+            sendMessageResult(true);
         } catch (UserNotFoundException exc) {
             sendMessageResult(false);
         }
     }
 
     private void handleMulticastMessage(MulticastMessagePacket multicastMessagePacket) {
+        // Gets all the users that are currently online.
+        List<Pair<User, Socket>> onlineUsers = OnlineUsers.getInstance().getAllUsers();
+        List<Socket> recipientsSockets = new ArrayList<>();
 
-    }
+        // Creates the list of all recipients.
+        for (Pair<User, Socket> onlineUser : onlineUsers) {
+            if (clientSocket != onlineUser.getValue())
+                recipientsSockets.add(onlineUser.getValue());
+        }
 
-    // TODO: implement checks on the readline to see if the client is still connected or if it is disconnected or if it is sending the END message
-    private boolean checkConnection() {
-        return false;
+        // Creating the dispatchable packet in order to send the message
+        // to the other client.
+        DispatchablePacket dispatchablePacket = new DispatchablePacket();
+        dispatchablePacket.setRecipientsSockets(recipientsSockets);
+        dispatchablePacket.setPacket(multicastMessagePacket);
+        // Adds the message result to the queue.
+        PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
+        // Notifies the sender that the message has been sent.
+        sendMessageResult(true);
+
     }
 
     private void sendMessageResult(boolean isReceived) {
@@ -225,11 +251,21 @@ public class ConnectionHandler implements Runnable {
         PacketsQueue.getInstance().enqueuePacket(dispatchablePacket);
     }
 
-    private void disconnectClient() throws IOException {
+    private void disconnectClient() {
+        // Checks if the user has already logged in.
         if (user != null && user.getUsername() != null) {
             OnlineUsers.getInstance().removeUser(user.getUsername());
         }
-        clientSocket.close();
+
+        try {
+            // Closing the connection with the client.
+            clientSocket.close();
+        } catch (IOException e) {
+            Logger.logError(this, "Error while disconnecting client.");
+        }
+
+        // We set stop to true in order to stop the current loop in which the thread
+        // is currently running.
         stop = true;
     }
 }
