@@ -39,6 +39,9 @@ public class ConnectionHandler implements Runnable {
         handleConnection();
     }
 
+    /**
+     * Handles the connection with a specific client on a separate thread.
+     */
     private void handleConnection() {
         // We are going to listen for new packets with this top level
         // function that allows us to catch any king of errors during
@@ -55,6 +58,11 @@ public class ConnectionHandler implements Runnable {
         }
     }
 
+    /**
+     * Listens for the packets coming from the specific client.
+     *
+     * @throws IOException thrown when an IO problem occurs.
+     */
     private void listen() throws IOException {
         // We need to open the input stream of the client in order
         // to be able to read his messages.
