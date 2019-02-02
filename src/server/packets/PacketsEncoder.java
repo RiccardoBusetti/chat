@@ -12,6 +12,14 @@ import java.util.List;
  * Class responsible of encoding the outcoming packets.
  */
 public class PacketsEncoder {
+
+    /**
+     * Decodes a Java POJO packet into a string packet that will be
+     * sent with the sockets.
+     *
+     * @param packet packet that needs to be encoded.
+     * @return the encoded packet as a string.
+     */
     public String encode(Packet packet) {
         try {
             Logger.logStatus(this, "Decoding " + packet.getHeaderType());
@@ -21,10 +29,12 @@ public class PacketsEncoder {
             Logger.logError(this, exc.getMessage());
         }
 
-        return "";
+        return new PacketsHeaderHelper().encodeHeader(Packet.HeaderType.EMPTY_PACKET);
     }
 
     private String encodePacket(Packet packet) throws MalformedPacketException {
+        validatePacket(packet);
+
         List<String> stringsToEncode = new ArrayList<>();
 
         PacketsHeaderHelper packetsHeaderHelper = new PacketsHeaderHelper();
@@ -63,9 +73,29 @@ public class PacketsEncoder {
             case ERROR_MESSAGE:
                 encodeErrorMessage(stringsToEncode, (ErrorPacket) packet);
                 break;
+            // If the packet is empty we won't do anything because the empty packet
+            // has already been appended and since the empty packet has no content
+            // we don't need to do anything.
+            case EMPTY_PACKET:
+                break;
         }
 
         return encodeStrings(stringsToEncode);
+    }
+
+    /**
+     * Validates the Java POJO representing the packet.
+     *
+     * @param packet packet represented in a Java POJO.
+     * @throws MalformedPacketException thrown if the packet is not correctly made.
+     */
+    private void validatePacket(Packet packet) throws MalformedPacketException {
+        if (packet == null) throw new MalformedPacketException("The packet is null.", true);
+        // Checking if the packet header equals to null in order
+        // to prevent it from being encoded.
+        if (packet.getHeaderType() == null) {
+            throw new MalformedPacketException("The packet header is null.", false);
+        }
     }
 
     /**

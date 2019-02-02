@@ -7,7 +7,8 @@ package server.entities.packets;
 public class BanPacket extends Packet {
     private boolean isBanned;
 
-    public BanPacket() {
+    public BanPacket(HeaderType headerType) {
+        super(headerType);
     }
 
     public BanPacket(HeaderType headerType, boolean isBanned) {

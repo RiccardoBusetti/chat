@@ -8,7 +8,8 @@ public class MulticastMessagePacket extends Packet {
     private String senderUsername;
     private String content;
 
-    public MulticastMessagePacket() {
+    public MulticastMessagePacket(HeaderType headerType) {
+        super(headerType);
     }
 
     public MulticastMessagePacket(HeaderType headerType, String senderUsername, String content) {

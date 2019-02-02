@@ -10,10 +10,6 @@ import java.util.List;
 public class OnlineUsersPacket extends Packet {
     private List<String> users;
 
-    public OnlineUsersPacket() {
-        this.users = new ArrayList<>();
-    }
-
     public OnlineUsersPacket(HeaderType headerType) {
         super(headerType);
         this.users = new ArrayList<>();

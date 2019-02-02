@@ -7,7 +7,8 @@ package server.entities.packets;
 public class ErrorPacket extends Packet {
     private String errorMessage;
 
-    public ErrorPacket() {
+    public ErrorPacket(HeaderType headerType) {
+        super(headerType);
     }
 
     public ErrorPacket(HeaderType headerType, String errorMessage) {

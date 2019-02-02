@@ -8,7 +8,8 @@ public class AccessPacket extends Packet {
     private String username;
     private String password;
 
-    public AccessPacket() {
+    public AccessPacket(HeaderType headerType) {
+        super(headerType);
     }
 
     public AccessPacket(HeaderType headerType, String username, String password) {

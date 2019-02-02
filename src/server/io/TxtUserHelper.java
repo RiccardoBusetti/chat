@@ -17,7 +17,7 @@ public class TxtUserHelper {
      * Encodes the user with the following semantics:
      * [username,password,isBlocked].
      *
-     * @param user user object.
+     * @param user      user object.
      * @param isBlocked true if the user is blocked false otherwise.
      * @return the encoded string.
      */

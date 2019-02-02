@@ -44,8 +44,8 @@ import java.util.List;
     /**
      * Searches a user by his username on a list.
      *
-     * @param username username to search for.
-     * @param users users list to search in.
+     * @param username         username to search for.
+     * @param users            users list to search in.
      * @param isRegisteredUser tells the exception if the user is not found in
      *                         the registered users or in the online users.
      * @return the user object pair.

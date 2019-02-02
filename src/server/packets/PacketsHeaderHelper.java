@@ -14,7 +14,7 @@ import java.util.Map;
     private Map<String, Packet.HeaderType> headersMap;
     private Map<Packet.HeaderType, String> headersInverseMap;
 
-    public PacketsHeaderHelper() {
+    /* package */ PacketsHeaderHelper() {
         this.headersMap = new HashMap<>();
         this.headersInverseMap = new HashMap<>();
         init();
@@ -51,11 +51,11 @@ import java.util.Map;
         headersInverseMap.put(Packet.HeaderType.ERROR_MESSAGE, Constants.ERROR_MESSAGE);
     }
 
-    public Packet.HeaderType decodeHeader(String header) {
+    /* package */ Packet.HeaderType decodeHeader(String header) {
         return headersMap.get(header);
     }
 
-    public String encodeHeader(Packet.HeaderType header) {
+    /* package */ String encodeHeader(Packet.HeaderType header) {
         return headersInverseMap.get(header);
     }
 }

@@ -7,7 +7,8 @@ package server.entities.packets;
 public class AccessResultPacket extends Packet {
     private boolean isAllowed;
 
-    public AccessResultPacket() {
+    public AccessResultPacket(HeaderType headerType) {
+        super(headerType);
     }
 
     public AccessResultPacket(HeaderType headerType, boolean isAllowed) {

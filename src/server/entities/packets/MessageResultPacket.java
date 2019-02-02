@@ -7,7 +7,8 @@ package server.entities.packets;
 public class MessageResultPacket extends Packet {
     private String receiveDate;
 
-    public MessageResultPacket() {
+    public MessageResultPacket(HeaderType headerType) {
+        super(headerType);
     }
 
     public MessageResultPacket(HeaderType headerType, String receiveDate) {

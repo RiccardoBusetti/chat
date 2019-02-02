@@ -9,7 +9,8 @@ public class UnicastMessagePacket extends Packet {
     private String recipientUsername;
     private String content;
 
-    public UnicastMessagePacket() {
+    public UnicastMessagePacket(HeaderType headerType) {
+        super(headerType);
     }
 
     public UnicastMessagePacket(HeaderType headerType, String senderUsername, String recipientUsername, String content) {

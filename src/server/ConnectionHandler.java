@@ -129,8 +129,7 @@ public class ConnectionHandler implements Runnable {
         user.setPassword(accessPacket.getPassword());
 
         // Preparing the result packet.
-        AccessResultPacket accessResultPacket = new AccessResultPacket();
-        accessResultPacket.setHeaderType(Packet.HeaderType.LOGIN_RESULT);
+        AccessResultPacket accessResultPacket = new AccessResultPacket(Packet.HeaderType.LOGIN_RESULT);
 
         // Performs the login and handles the result specifically.
         switch (AccessHelper.login(user.getUsername(), user.getPassword())) {
@@ -160,8 +159,7 @@ public class ConnectionHandler implements Runnable {
         user.setPassword(accessPacket.getPassword());
 
         // Preparing the result packet.
-        AccessResultPacket accessResultPacket = new AccessResultPacket();
-        accessResultPacket.setHeaderType(Packet.HeaderType.REGISTER_RESULT);
+        AccessResultPacket accessResultPacket = new AccessResultPacket(Packet.HeaderType.REGISTER_RESULT);
 
         // Performs the registration and handles the result specifically.
         switch (AccessHelper.register(accessPacket.getUsername(), accessPacket.getPassword())) {
@@ -260,8 +258,11 @@ public class ConnectionHandler implements Runnable {
     }
 
     private void sendMessageResult(boolean isReceived) {
-        MessageResultPacket messageResultPacket = new MessageResultPacket(Packet.HeaderType.MESSAGE_RESULT,
-                isReceived ? LocalDateTime.now().toString() : Constants.NO_DATE);
+        // Building the packet which will notify the client that the
+        // message has been received by the server.
+        // NB: if the packet is not received we will send a null date.
+        MessageResultPacket messageResultPacket = new MessageResultPacket(Packet.HeaderType.MESSAGE_RESULT);
+        messageResultPacket.setReceiveDate(isReceived ? LocalDateTime.now().toString() : Constants.NO_DATE);
 
         // Prepares the result of the message.
         DispatchablePacket dispatchablePacket = new DispatchablePacket();
