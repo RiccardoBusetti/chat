@@ -22,7 +22,7 @@ public class PacketsEncoder {
      */
     public String encode(Packet packet) {
         try {
-            Logger.logStatus(this, "Decoding " + packet.getHeaderType());
+            Logger.logStatus(this, "Encoding packet.");
 
             return encodePacket(packet);
         } catch (MalformedPacketException exc) {

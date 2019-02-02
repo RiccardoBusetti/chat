@@ -23,6 +23,7 @@ public class Constants {
     public static final String ONLINE_USERS_DATA = "OnlineUsers";
     public static final String BAN_STATUS = "BanStatus";
     public static final String ERROR_MESSAGE = "Error";
+    public static final String EMPTY_PACKET = "EmptyPacket";
 
     // Null constants.
     public static final String NO_DATE = "-1";

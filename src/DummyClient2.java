@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class Test {
+public class DummyClient2 {
 
     public static void main(String[] args) throws IOException {
         Socket clientSocket = new Socket(InetAddress.getLocalHost(), 8888);

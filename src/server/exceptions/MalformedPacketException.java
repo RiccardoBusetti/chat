@@ -13,6 +13,6 @@ public class MalformedPacketException extends Throwable {
 
     @Override
     public String getMessage() {
-        return "The packet is malformed and cannot be " + (isDecoding ? "decoded" : "encoded") + ": " + super.getMessage();
+        return "Malformed packet during " + (isDecoding ? "decoding" : "encoding") + ": " + super.getMessage();
     }
 }

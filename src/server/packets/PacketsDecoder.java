@@ -18,7 +18,7 @@ public class PacketsDecoder {
      */
     public Packet decode(String packet) {
         try {
-            Logger.logStatus(this, "Decoding " + packet);
+            Logger.logStatus(this, "Decoding packet.");
 
             return decodePacket(packet);
         } catch (MalformedPacketException exc) {
@@ -93,6 +93,11 @@ public class PacketsDecoder {
         // because we need at least the header.
         if (packetFields.length < 1) {
             throw new MalformedPacketException("The packet has no header.", true);
+        }
+
+        // Checking if the packet header exists.
+        if (new PacketsHeaderHelper().decodeHeader(packetFields[0]) == null) {
+            throw new MalformedPacketException("The packet header is invalid.", true);
         }
 
         return packetFields;

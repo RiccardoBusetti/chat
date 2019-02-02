@@ -36,6 +36,7 @@ import java.util.Map;
         headersMap.put(Constants.ONLINE_USERS_DATA, Packet.HeaderType.ONLINE_USERS_DATA);
         headersMap.put(Constants.BAN_STATUS, Packet.HeaderType.BAN_STATUS);
         headersMap.put(Constants.ERROR_MESSAGE, Packet.HeaderType.ERROR_MESSAGE);
+        headersMap.put(Constants.EMPTY_PACKET, Packet.HeaderType.EMPTY_PACKET);
     }
 
     private void initInverseMap() {
@@ -49,6 +50,7 @@ import java.util.Map;
         headersInverseMap.put(Packet.HeaderType.ONLINE_USERS_DATA, Constants.ONLINE_USERS_DATA);
         headersInverseMap.put(Packet.HeaderType.BAN_STATUS, Constants.BAN_STATUS);
         headersInverseMap.put(Packet.HeaderType.ERROR_MESSAGE, Constants.ERROR_MESSAGE);
+        headersInverseMap.put(Packet.HeaderType.EMPTY_PACKET, Constants.EMPTY_PACKET);
     }
 
     /* package */ Packet.HeaderType decodeHeader(String header) {

@@ -10,7 +10,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class ClientTest {
+public class DummyClient1 {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         Socket clientSocket = new Socket(InetAddress.getLocalHost(), 8888);
