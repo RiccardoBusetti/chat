@@ -16,7 +16,7 @@ public class DummyClient2 {
 
         PacketsEncoder packetsEncoder = new PacketsEncoder();
         PrintWriter printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
-        printWriter.println(packetsEncoder.encode(new AccessPacket(Packet.HeaderType.REGISTER_DATA, "riccardo", "12345")));
+        printWriter.println(packetsEncoder.encode(new AccessPacket(false, "riccardo", "12345")));
 
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 

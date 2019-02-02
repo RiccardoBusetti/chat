@@ -9,12 +9,12 @@ public class UnicastMessagePacket extends Packet {
     private String recipientUsername;
     private String content;
 
-    public UnicastMessagePacket(HeaderType headerType) {
-        super(headerType);
+    public UnicastMessagePacket() {
+        super(HeaderType.UNICAST_MESSAGE_DATA);
     }
 
-    public UnicastMessagePacket(HeaderType headerType, String senderUsername, String recipientUsername, String content) {
-        super(headerType);
+    public UnicastMessagePacket(String senderUsername, String recipientUsername, String content) {
+        this();
         this.senderUsername = senderUsername;
         this.recipientUsername = recipientUsername;
         this.content = content;

@@ -50,22 +50,22 @@ public class PacketsDecoder {
                 decodedPacket = decodeAccessResult(packetHeader, packetFields);
                 break;
             case UNICAST_MESSAGE_DATA:
-                decodedPacket = decodeUnicastMessageData(packetHeader, packetFields);
+                decodedPacket = decodeUnicastMessageData(packetFields);
                 break;
             case MULTICAST_MESSAGE_DATA:
-                decodedPacket = decodeMulticastMessageData(packetHeader, packetFields);
+                decodedPacket = decodeMulticastMessageData(packetFields);
                 break;
             case MESSAGE_RESULT:
-                decodedPacket = decodeMessageResult(packetHeader, packetFields);
+                decodedPacket = decodeMessageResult(packetFields);
                 break;
             case ONLINE_USERS_DATA:
-                decodedPacket = decodeOnlineUsersData(packetHeader, packetFields);
+                decodedPacket = decodeOnlineUsersData(packetFields);
                 break;
             case BAN_STATUS:
-                decodedPacket = decodeBanStatus(packetHeader, packetFields);
+                decodedPacket = decodeBanStatus(packetFields);
                 break;
             case ERROR_MESSAGE:
-                decodedPacket = decodeErrorMessage(packetHeader, packetFields);
+                decodedPacket = decodeErrorMessage(packetFields);
                 break;
             case EMPTY_PACKET:
             default:
@@ -108,7 +108,7 @@ public class PacketsDecoder {
      * [header,username,password].
      */
     private AccessPacket decodeAccessData(Packet.HeaderType packetHeader, String[] packetData) {
-        AccessPacket accessPacket = new AccessPacket(packetHeader);
+        AccessPacket accessPacket = new AccessPacket(packetHeader == Packet.HeaderType.LOGIN_DATA);
         accessPacket.setUsername(packetData[1]);
         accessPacket.setPassword(packetData[2]);
 
@@ -120,7 +120,7 @@ public class PacketsDecoder {
      * [header,isAllowed].
      */
     private AccessResultPacket decodeAccessResult(Packet.HeaderType packetHeader, String[] packetData) {
-        AccessResultPacket accessResultPacket = new AccessResultPacket(packetHeader);
+        AccessResultPacket accessResultPacket = new AccessResultPacket(packetHeader == Packet.HeaderType.LOGIN_RESULT);
         accessResultPacket.setAllowed(Boolean.valueOf(packetData[1]));
 
         return accessResultPacket;
@@ -130,8 +130,8 @@ public class PacketsDecoder {
      * Decodes the unicast message packet that has the following semantics:
      * [header,sender,recipient,content].
      */
-    private UnicastMessagePacket decodeUnicastMessageData(Packet.HeaderType packetHeader, String[] packetData) {
-        UnicastMessagePacket unicastMessagePacket = new UnicastMessagePacket(packetHeader);
+    private UnicastMessagePacket decodeUnicastMessageData(String[] packetData) {
+        UnicastMessagePacket unicastMessagePacket = new UnicastMessagePacket();
         unicastMessagePacket.setSenderUsername(packetData[1]);
         unicastMessagePacket.setRecipientUsername(packetData[2]);
         unicastMessagePacket.setContent(packetData[3]);
@@ -143,8 +143,8 @@ public class PacketsDecoder {
      * Decodes the multicast message packet that has the following semantics:
      * [header,sender,content].
      */
-    private MulticastMessagePacket decodeMulticastMessageData(Packet.HeaderType packetHeader, String[] packetData) {
-        MulticastMessagePacket multicastMessagePacket = new MulticastMessagePacket(packetHeader);
+    private MulticastMessagePacket decodeMulticastMessageData(String[] packetData) {
+        MulticastMessagePacket multicastMessagePacket = new MulticastMessagePacket();
         multicastMessagePacket.setSenderUsername(packetData[1]);
         multicastMessagePacket.setContent(packetData[2]);
 
@@ -155,8 +155,8 @@ public class PacketsDecoder {
      * Decodes the message result packet that has the following semantics:
      * [header,receiveDate].
      */
-    private MessageResultPacket decodeMessageResult(Packet.HeaderType packetHeader, String[] packetData) {
-        MessageResultPacket messageResultPacket = new MessageResultPacket(packetHeader);
+    private MessageResultPacket decodeMessageResult(String[] packetData) {
+        MessageResultPacket messageResultPacket = new MessageResultPacket();
         messageResultPacket.setReceiveDate(packetData[1]);
 
         return messageResultPacket;
@@ -166,8 +166,8 @@ public class PacketsDecoder {
      * Decodes the online users packet that has the following semantics:
      * [header,usersList].
      */
-    private OnlineUsersPacket decodeOnlineUsersData(Packet.HeaderType packetHeader, String[] packetData) {
-        OnlineUsersPacket onlineUsersPacket = new OnlineUsersPacket(packetHeader);
+    private OnlineUsersPacket decodeOnlineUsersData(String[] packetData) {
+        OnlineUsersPacket onlineUsersPacket = new OnlineUsersPacket();
         String[] users = packetData[1].split(Constants.COMMA_SEPARATOR);
 
         for (String user : users) {
@@ -181,8 +181,8 @@ public class PacketsDecoder {
      * Decodes the ban status packet that has the following semantics:
      * [header,isBanned].
      */
-    private BanPacket decodeBanStatus(Packet.HeaderType packetHeader, String[] packetData) {
-        BanPacket banPacket = new BanPacket(packetHeader);
+    private BanPacket decodeBanStatus(String[] packetData) {
+        BanPacket banPacket = new BanPacket();
         banPacket.setBanned(Boolean.valueOf(packetData[1]));
 
         return banPacket;
@@ -192,8 +192,8 @@ public class PacketsDecoder {
      * Decodes the error message packet that has the following semantics:
      * [header,errorMessage].
      */
-    private ErrorPacket decodeErrorMessage(Packet.HeaderType packetHeader, String[] packetData) {
-        ErrorPacket errorPacket = new ErrorPacket(packetHeader);
+    private ErrorPacket decodeErrorMessage(String[] packetData) {
+        ErrorPacket errorPacket = new ErrorPacket();
         errorPacket.setErrorMessage(packetData[1]);
 
         return errorPacket;

@@ -129,7 +129,7 @@ public class ConnectionHandler implements Runnable {
         user.setPassword(accessPacket.getPassword());
 
         // Preparing the result packet.
-        AccessResultPacket accessResultPacket = new AccessResultPacket(Packet.HeaderType.LOGIN_RESULT);
+        AccessResultPacket accessResultPacket = new AccessResultPacket(true);
 
         // Performs the login and handles the result specifically.
         switch (AccessHelper.login(user.getUsername(), user.getPassword())) {
@@ -159,7 +159,7 @@ public class ConnectionHandler implements Runnable {
         user.setPassword(accessPacket.getPassword());
 
         // Preparing the result packet.
-        AccessResultPacket accessResultPacket = new AccessResultPacket(Packet.HeaderType.REGISTER_RESULT);
+        AccessResultPacket accessResultPacket = new AccessResultPacket(false);
 
         // Performs the registration and handles the result specifically.
         switch (AccessHelper.register(accessPacket.getUsername(), accessPacket.getPassword())) {
@@ -243,25 +243,30 @@ public class ConnectionHandler implements Runnable {
                 recipientsSockets.add(onlineUser.getValue());
         }
 
-        // Creating the dispatchable packet in order to send the message
-        // to the other client.
-        DispatchablePacket dispatchablePacket = new DispatchablePacket();
-        dispatchablePacket.setRecipientsSockets(recipientsSockets);
-        dispatchablePacket.setPacket(multicastMessagePacket);
+        // Checking if there is at least 1 user online because if there aren't
+        // users online then the message is not being sent.
+        if (recipientsSockets.size() > 0) {
+            // Creating the dispatchable packet in order to send the message
+            // to the other client.
+            DispatchablePacket dispatchablePacket = new DispatchablePacket();
+            dispatchablePacket.setRecipientsSockets(recipientsSockets);
+            dispatchablePacket.setPacket(multicastMessagePacket);
 
-        // Adds the message result to the queue.
-        PacketsQueue.getInstance().sendPacket(dispatchablePacket);
+            // Adds the message result to the queue.
+            PacketsQueue.getInstance().sendPacket(dispatchablePacket);
 
-        // Notifies the sender that the message has been sent.
-        sendMessageResult(true);
-
+            // Notifies the sender that the message has been sent.
+            sendMessageResult(true);
+        } else {
+            sendMessageResult(false);
+        }
     }
 
     private void sendMessageResult(boolean isReceived) {
         // Building the packet which will notify the client that the
         // message has been received by the server.
         // NB: if the packet is not received we will send a null date.
-        MessageResultPacket messageResultPacket = new MessageResultPacket(Packet.HeaderType.MESSAGE_RESULT);
+        MessageResultPacket messageResultPacket = new MessageResultPacket();
         messageResultPacket.setReceiveDate(isReceived ? LocalDateTime.now().toString() : Constants.NO_DATE);
 
         // Prepares the result of the message.
@@ -274,7 +279,7 @@ public class ConnectionHandler implements Runnable {
     }
 
     private void sendErrorMessage(String errorMessage) {
-        ErrorPacket errorPacket = new ErrorPacket(Packet.HeaderType.ERROR_MESSAGE, errorMessage);
+        ErrorPacket errorPacket = new ErrorPacket(errorMessage);
 
         // Prepares the result of the access.
         DispatchablePacket dispatchablePacket = new DispatchablePacket();
