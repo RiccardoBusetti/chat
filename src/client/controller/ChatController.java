@@ -1,12 +1,16 @@
 package client.controller;
 
-import client.ClientSupporter;
+import client.handlers.ClientSupporter;
+import client.handlers.Dialogs;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+import server.entities.packets.MulticastMessagePacket;
+import server.packets.PacketsEncoder;
 
 import java.io.IOException;
 import java.net.URL;
@@ -16,6 +20,11 @@ public class ChatController extends Application implements Initializable {
 
     private String username;
     private ClientSupporter client;
+
+    @FXML
+    private TextArea messageText;
+    @FXML
+    private Button sendButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -40,8 +49,35 @@ public class ChatController extends Application implements Initializable {
     }
 
     @FXML
+    public void openFormNewPrivateMessage(ActionEvent event){
+
+    }
+
+    public void putMessage(String sender, String receiver, String message){
+        if (receiver == null){
+            //MULTICAST
+            System.out.println("Multicast Message: " + message);
+        }else {
+            //UNICAST
+            System.out.println("Unicast Message: " + message);
+        }
+    }
+
+    @FXML
+    public void sendMulticastMessage(ActionEvent event) throws IOException {
+        PacketsEncoder packetsEncoder = new PacketsEncoder();
+        System.out.println(messageText.getText());
+        client.sendLine(packetsEncoder.encode(new MulticastMessagePacket(this.username, messageText.getText())));
+    }
+
+    @FXML
     public void exitApplication(ActionEvent event) {
         Platform.exit();
+    }
+
+    @FXML
+    public void showAppInfo(ActionEvent event){
+        Dialogs.showInfoHeadlessDialog("SampleApplication");
     }
 
     public void setUsername(String username){

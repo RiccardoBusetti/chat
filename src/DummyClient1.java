@@ -24,7 +24,7 @@ public class DummyClient1 {
         String line = bufferedReader.readLine();
         System.out.println(line);
 
-        printWriter.println(packetsEncoder.encode(new UnicastMessagePacket("paola", "riccardo", "Ciao come stai?")));
+        printWriter.println(packetsEncoder.encode(new MulticastMessagePacket("paola", "Ciao come stai?")));
         line = bufferedReader.readLine();
         System.out.println(line);
 

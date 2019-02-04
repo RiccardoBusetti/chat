@@ -1,16 +1,15 @@
 package client.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 // ------------------------------------------------
 // CLIENT IMPORTS
-import client.ClientSupporter;
-import client.Dialogs;
+import client.handlers.ClientReader;
+import client.handlers.ClientSupporter;
+import client.handlers.Dialogs;
 import client.Main;
-import client.Sound;
-import client.constants.Constants;
+import client.handlers.Sound;
 import server.entities.packets.AccessPacket;
 import server.entities.packets.AccessResultPacket;
 import server.entities.packets.ErrorPacket;
@@ -27,7 +26,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.stage.*;
 
 
@@ -91,7 +89,7 @@ public class LoginController implements Initializable {
 
             PacketsEncoder pk = new PacketsEncoder();
             PacketsDecoder dpk = new PacketsDecoder();
-            AccessPacket apk = new AccessPacket(Packet.HeaderType.LOGIN_DATA, user, pass);
+            AccessPacket apk = new AccessPacket(true, user, pass);
             AccessResultPacket accessResultPacket1;
             try {
                 String response = client.makeRequest(pk.encode(apk));
@@ -106,6 +104,7 @@ public class LoginController implements Initializable {
                 return;
             } catch (Exception e) {
                 Dialogs.showErrorDialog("Login error", e.getMessage());
+                e.printStackTrace();
                 return;
             }
 
@@ -145,7 +144,7 @@ public class LoginController implements Initializable {
             // -----------------------------------------------------------------------------------------
             PacketsEncoder pk = new PacketsEncoder();
             PacketsDecoder dpk = new PacketsDecoder();
-            AccessPacket apk = new AccessPacket(Packet.HeaderType.REGISTER_DATA, user, pass);
+            AccessPacket apk = new AccessPacket(false, user, pass);
             AccessResultPacket accessResultPacket1;
             try {
                 String response = client.makeRequest(pk.encode(apk));
@@ -182,10 +181,10 @@ public class LoginController implements Initializable {
 
     private void gotoChat(String username) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader( Main.class.getResource( "views/ChatApplication2.fxml" ) );
+        FXMLLoader loader = new FXMLLoader( Main.class.getResource( "views/ChatApplication.fxml" ) );
         Parent root = loader.load();
 
-        //Parent root = FXMLLoader.load(SampleApplication.class.getResource("views/ChatApplication2.fxml"));
+        //Parent root = FXMLLoader.load(SampleApplication.class.getResource("views/ChatApplication.fxml"));
         Scene scene = new Scene(root);
         ChatController rc = loader.getController();
         rc.setUsername(username);
@@ -198,6 +197,7 @@ public class LoginController implements Initializable {
         stage.setScene(scene);
         this.stage.hide();
         stage.show();
+        new ClientReader(client, rc).start();
 
     }
 

@@ -1,4 +1,4 @@
-package client;
+package client.handlers;
 
 import client.constants.Constants;
 import javafx.scene.media.Media;

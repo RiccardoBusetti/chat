@@ -2,6 +2,9 @@ package client;
 
 import client.constants.Constants;
 import client.controller.LoginController;
+import client.handlers.ClientSupporter;
+import client.handlers.Dialogs;
+import client.handlers.Sound;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,7 +30,7 @@ public class Main extends Application {
             System.exit(1);
         }
         
-        //Parent root = FXMLLoader.load(SampleApplication.class.getResource("views/ChatApplication2.fxml"));
+        //Parent root = FXMLLoader.load(SampleApplication.class.getResource("views/ChatApplication.fxml"));
         Scene scene = new Scene(root);
         LoginController rc = loader.getController();
         rc.setClient(client);

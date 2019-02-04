@@ -1,4 +1,4 @@
-package client;
+package client.handlers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -54,8 +54,15 @@ public class ClientSupporter {
         return (bufferedReader.readLine());
     }
 
+    public void sendLine(String data){
+        printWriter.println(data);
+    }
+
     public void closeSocket() throws IOException {
         clientSocket.close();
     }
 
+    public String readLine() throws IOException {
+        return (bufferedReader.readLine());
+    }
 }
