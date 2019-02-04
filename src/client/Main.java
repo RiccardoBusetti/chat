@@ -19,9 +19,14 @@ public class Main extends Application {
 
         FXMLLoader loader = new FXMLLoader( Main.class.getResource( "views/LoginApplication.fxml" ) );
         Parent root = loader.load();
-        ClientSupporter client = new ClientSupporter(Constants.SERVER_HOST, Constants.SERVER_PORT);
-
-
+        ClientSupporter client = null;
+        try{
+            client = new ClientSupporter(Constants.SERVER_HOST, Constants.SERVER_PORT);
+        }catch (Exception e){
+            Dialogs.showErrorDialog("Connection error", "Cannot connect to the server");
+            System.exit(1);
+        }
+        
         //Parent root = FXMLLoader.load(SampleApplication.class.getResource("views/ChatApplication2.fxml"));
         Scene scene = new Scene(root);
         LoginController rc = loader.getController();

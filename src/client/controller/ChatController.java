@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -29,6 +30,12 @@ public class ChatController extends Application implements Initializable {
     @Override
     public void stop(){
         System.out.println("Stage is closing");
+        try {
+            client.closeSocket();
+        } catch (IOException e) {
+            System.out.println("Error on closing socket");
+            e.printStackTrace();
+        }
         // Save file
     }
 
