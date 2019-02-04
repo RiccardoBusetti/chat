@@ -108,7 +108,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
         List<Pair<User, Boolean>> registeredUsers = getAllUsers();
 
         // Removes the user from the registered users.
-        registeredUsers.remove(searchUser(username, registeredUsers));
+        registeredUsers.remove(searchUserByUsername(username, registeredUsers, true));
 
         TxtFilesHelper.clear(filePath);
 
@@ -122,7 +122,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
         List<Pair<User, Boolean>> registeredUsers = getAllUsers();
 
         // Updates the user status from not blocked to blocked.
-        Pair<User, Boolean> foundUser = searchUser(username, registeredUsers);
+        Pair<User, Boolean> foundUser = searchUserByUsername(username, registeredUsers, true);
         registeredUsers.remove(foundUser);
         Pair<User, Boolean> blockedUser = new Pair<>(foundUser.getKey(), isBlocked);
         registeredUsers.add(blockedUser);
@@ -136,30 +136,13 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
     }
 
     private Pair<User, Boolean> searchUser(String username) throws UserNotFoundException {
-        return searchUser(username, getAllUsers());
-    }
-
-    // TODO: find a way to avoid this code duplication.
-    private Pair<User, Boolean> searchUser(String username, List<Pair<User, Boolean>> registeredUsers) throws UserNotFoundException {
-        int counter = 0;
-
-        while (counter < registeredUsers.size()) {
-            Pair<User, Boolean> registeredUser = registeredUsers.get(counter);
-
-            if (registeredUser.getKey().getUsername().equals(username)) {
-                return registeredUser;
-            }
-
-            counter++;
-        }
-
-        throw new UserNotFoundException(true);
+        return searchUserByUsername(username, getAllUsers(), true);
     }
 
     private List<Pair<User, Boolean>> getAllRegisteredUsersOnFile() {
         List<Pair<User, Boolean>> registeredUsers = new ArrayList<>();
 
-        // Converts
+        // Converts the file lines in a list of registered user object pairs.
         for (String line : TxtFilesHelper.getAllLines(filePath)) {
             registeredUsers.add(TxtUserHelper.decodeUser(line));
         }

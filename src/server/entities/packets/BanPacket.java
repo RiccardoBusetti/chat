@@ -8,10 +8,11 @@ public class BanPacket extends Packet {
     private boolean isBanned;
 
     public BanPacket() {
+        super(HeaderType.BAN_STATUS);
     }
 
-    public BanPacket(HeaderType headerType, boolean isBanned) {
-        super(headerType);
+    public BanPacket(boolean isBanned) {
+        this();
         this.isBanned = isBanned;
     }
 

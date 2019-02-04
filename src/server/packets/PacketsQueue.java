@@ -23,7 +23,7 @@ public class PacketsQueue {
         return instance;
     }
 
-    public void enqueuePacket(DispatchablePacket dispatchablePacket) {
+    public void sendPacket(DispatchablePacket dispatchablePacket) {
         try {
             put(dispatchablePacket);
         } catch (Exception e) {
@@ -35,7 +35,7 @@ public class PacketsQueue {
         packetsQueue.put(dispatchablePacket);
     }
 
-    public DispatchablePacket dequeuePacket() {
+    public DispatchablePacket getPacketToSend() {
         try {
             return take();
         } catch (Exception e) {

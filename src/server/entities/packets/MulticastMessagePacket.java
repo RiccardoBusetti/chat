@@ -9,10 +9,11 @@ public class MulticastMessagePacket extends Packet {
     private String content;
 
     public MulticastMessagePacket() {
+        super(HeaderType.MULTICAST_MESSAGE_DATA);
     }
 
-    public MulticastMessagePacket(HeaderType headerType, String senderUsername, String content) {
-        super(headerType);
+    public MulticastMessagePacket(String senderUsername, String content) {
+        this();
         this.senderUsername = senderUsername;
         this.content = content;
     }

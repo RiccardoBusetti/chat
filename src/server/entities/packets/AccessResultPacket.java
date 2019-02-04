@@ -7,11 +7,12 @@ package server.entities.packets;
 public class AccessResultPacket extends Packet {
     private boolean isAllowed;
 
-    public AccessResultPacket() {
+    public AccessResultPacket(boolean isLoginResultPacket) {
+        super(isLoginResultPacket ? HeaderType.LOGIN_RESULT : HeaderType.REGISTER_RESULT);
     }
 
-    public AccessResultPacket(HeaderType headerType, boolean isAllowed) {
-        super(headerType);
+    public AccessResultPacket(boolean isLoginResultPacket, boolean isAllowed) {
+        this(isLoginResultPacket);
         this.isAllowed = isAllowed;
     }
 

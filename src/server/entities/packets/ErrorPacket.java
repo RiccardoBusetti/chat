@@ -8,10 +8,11 @@ public class ErrorPacket extends Packet {
     private String errorMessage;
 
     public ErrorPacket() {
+        super(HeaderType.ERROR_MESSAGE);
     }
 
-    public ErrorPacket(HeaderType headerType, String errorMessage) {
-        super(headerType);
+    public ErrorPacket(String errorMessage) {
+        this();
         this.errorMessage = errorMessage;
     }
 

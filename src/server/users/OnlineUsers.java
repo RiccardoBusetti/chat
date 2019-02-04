@@ -40,7 +40,7 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
     @Override
     public synchronized void removeUser(String username) {
         try {
-            Pair<User, Socket> user = searchUserByUsername(username);
+            Pair<User, Socket> user = searchUserByUsername(username, onlineUsers, false);
             user.getValue().close();
             onlineUsers.remove(user);
 
@@ -59,7 +59,7 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
 
     @Override
     public synchronized Pair<User, Socket> getUserByUsername(String username) throws UserNotFoundException {
-        return searchUserByUsername(username);
+        return searchUserByUsername(username, onlineUsers, false);
     }
 
     @Override
@@ -70,21 +70,5 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
     @Override
     public synchronized void observe(UsersObserver<User, Socket> usersObserver) {
         attachObserver(usersObserver);
-    }
-
-    private Pair<User, Socket> searchUserByUsername(String username) throws UserNotFoundException {
-        int counter = 0;
-
-        while (counter < onlineUsers.size()) {
-            Pair<User, Socket> onlineUser = onlineUsers.get(counter);
-
-            if (onlineUser.getKey().getUsername().equals(username)) {
-                return onlineUser;
-            }
-
-            counter++;
-        }
-
-        throw new UserNotFoundException(false);
     }
 }

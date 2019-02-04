@@ -8,11 +8,12 @@ public class AccessPacket extends Packet {
     private String username;
     private String password;
 
-    public AccessPacket() {
+    public AccessPacket(boolean isLoginPacket) {
+        super(isLoginPacket ? HeaderType.LOGIN_DATA : HeaderType.REGISTER_DATA);
     }
 
-    public AccessPacket(HeaderType headerType, String username, String password) {
-        super(headerType);
+    public AccessPacket(boolean isLoginPacket, String username, String password) {
+        this(isLoginPacket);
         this.username = username;
         this.password = password;
     }
