@@ -14,9 +14,9 @@ import java.net.Socket;
 public class OnlineUsersListViewCell extends ListCell<Pair<User, Socket>> {
 
     @FXML
-    Label usernameLabel;
+    private Label usernameLabel;
     @FXML
-    Label socketLabel;
+    private Label socketLabel;
 
     @Override
     protected void updateItem(Pair<User, Socket> item, boolean empty) {
@@ -36,6 +36,9 @@ public class OnlineUsersListViewCell extends ListCell<Pair<User, Socket>> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            setText(null);
+            setGraphic(null);
         }
     }
 }

@@ -53,7 +53,7 @@ public class ConnectionHandler implements Runnable {
 
             listen();
         } catch (IOException exc) {
-            Logger.logError(this, "An error occurred while handling the connection: " + exc.getMessage());
+            Logger.logError(this, "An error occurred while handling the connection: " + exc.getMessage() + ", disconnection in progress...");
             disconnectClient();
         }
     }
@@ -82,7 +82,6 @@ public class ConnectionHandler implements Runnable {
 
         while (!isAllowed && !stop) {
             String inputString = bufferedReader.readLine();
-            System.out.println(inputString);
 
             if (inputString != null) {
                 Packet packet = packetsDecoder.decode(inputString);
@@ -116,6 +115,7 @@ public class ConnectionHandler implements Runnable {
                     sendErrorMessage("Prima di inviare messaggi devi fare l'accesso.");
                 }
             } else {
+                Logger.logStatus(this, "Received null line from the client, disconnection in progress...");
                 disconnectClient();
             }
         }
@@ -134,6 +134,7 @@ public class ConnectionHandler implements Runnable {
         // Performs the login and handles the result specifically.
         switch (AccessHelper.login(user.getUsername(), user.getPassword())) {
             case LOGIN_SUCCESSFUL:
+                Logger.logConnection(this, "Login successful for the user " + user.getUsername());
                 accessResultPacket.setAllowed(true);
 
                 // Now the user is online, so we will add it to the online users list.
@@ -144,6 +145,7 @@ public class ConnectionHandler implements Runnable {
             case LOGIN_WRONG_CREDENTIALS:
             case LOGIN_USER_ALREADY_ONLINE:
             default:
+                Logger.logConnection(this, "Login not allowed for the user " + user.getUsername());
                 accessResultPacket.setAllowed(false);
                 break;
         }
@@ -165,6 +167,7 @@ public class ConnectionHandler implements Runnable {
         switch (AccessHelper.register(accessPacket.getUsername(), accessPacket.getPassword())) {
             case REGISTRATION_SUCCESSFUL:
             case REGISTRATION_ALREADY_EXISTING_USER:
+                Logger.logConnection(this, "Registration successful for the user " + user.getUsername());
                 accessResultPacket.setAllowed(true);
 
                 // Now the user is online, so we will add it to the online users list.
@@ -173,6 +176,7 @@ public class ConnectionHandler implements Runnable {
             case REGISTRATION_BLOCKED_USER:
             case REGISTRATION_USER_ALREADY_ONLINE:
             default:
+                Logger.logConnection(this, "Registration not allowed for the user " + user.getUsername());
                 accessResultPacket.setAllowed(false);
                 break;
         }
@@ -207,6 +211,7 @@ public class ConnectionHandler implements Runnable {
                     sendErrorMessage("Il messaggio da te inviato ha un formato errato, riprova.");
                 }
             } else {
+                Logger.logStatus(this, "Received null line from the client, disconnection in progress...");
                 disconnectClient();
             }
         }

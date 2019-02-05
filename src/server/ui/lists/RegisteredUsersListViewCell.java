@@ -15,9 +15,9 @@ import java.io.IOException;
 public class RegisteredUsersListViewCell extends ListCell<Pair<User, Boolean>> {
 
     @FXML
-    Label usernameLabel;
+    private Label usernameLabel;
     @FXML
-    Button blockUserButton;
+    private Button blockUserButton;
 
     @Override
     protected void updateItem(Pair<User, Boolean> item, boolean empty) {
@@ -43,6 +43,9 @@ public class RegisteredUsersListViewCell extends ListCell<Pair<User, Boolean>> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else {
+            setText(null);
+            setGraphic(null);
         }
     }
 }

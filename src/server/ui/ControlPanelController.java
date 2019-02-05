@@ -20,15 +20,15 @@ import java.net.Socket;
 public class ControlPanelController {
 
     @FXML
-    TextField serverPortTextField;
+    private TextField serverPortTextField;
     @FXML
-    Button serverActionButton;
+    private Button serverActionButton;
     @FXML
-    TabPane usersTabPane;
+    private TabPane usersTabPane;
     @FXML
-    ListView<Pair<User, Socket>> onlineUsersListView;
+    private ListView<Pair<User, Socket>> onlineUsersListView;
     @FXML
-    ListView<Pair<User, Boolean>> registeredUsersListView;
+    private ListView<Pair<User, Boolean>> registeredUsersListView;
 
     private Main main;
     private int port = 8888;

@@ -87,7 +87,7 @@ public class PacketsDecoder {
     private String[] validatePacket(String packet) throws MalformedPacketException {
         if (packet == null || packet.equals("")) throw new MalformedPacketException("The packet is null or empty.", true);
 
-        String[] packetFields = packet.split(hexToAscii(Constants.DIVIDE_REGEX));
+        String[] packetFields = packet.split(PacketsUtils.hexToAscii(Constants.DIVIDE_REGEX));
 
         // Checking if the incoming packet has less than two fields,
         // because we need at least the header.
@@ -197,20 +197,5 @@ public class PacketsDecoder {
         errorPacket.setErrorMessage(packetData[1]);
 
         return errorPacket;
-    }
-
-    /**
-     * Source: https://www.baeldung.com/java-convert-hex-to-ascii
-     * Needed for encoding the hex ascii to ascii char
-     */
-    private static String hexToAscii(String hexStr) {
-        StringBuilder output = new StringBuilder("");
-
-        for (int i = 0; i < hexStr.length(); i += 2) {
-            String str = hexStr.substring(i, i + 2);
-            output.append((char) Integer.parseInt(str, 16));
-        }
-
-        return output.toString();
     }
 }

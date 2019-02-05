@@ -185,24 +185,9 @@ public class PacketsEncoder {
         for (int i = 0; i < stringsToEncode.size(); i++) {
             stringBuilder.append(stringsToEncode.get(i));
             // We are going to append the divider on all the strings besides the last one.
-            if (i < stringsToEncode.size() - 1) stringBuilder.append(hexToAscii(Constants.DIVIDE_REGEX));
+            if (i < stringsToEncode.size() - 1) stringBuilder.append(PacketsUtils.hexToAscii(Constants.DIVIDE_REGEX));
         }
 
         return stringBuilder.toString();
-    }
-
-    /**
-     * Source: https://www.baeldung.com/java-convert-hex-to-ascii
-     * Needed for encoding the hex ascii to ascii char
-     */
-    private static String hexToAscii(String hexStr) {
-        StringBuilder output = new StringBuilder("");
-
-        for (int i = 0; i < hexStr.length(); i += 2) {
-            String str = hexStr.substring(i, i + 2);
-            output.append((char) Integer.parseInt(str, 16));
-        }
-
-        return output.toString();
     }
 }
