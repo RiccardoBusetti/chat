@@ -146,6 +146,7 @@ public class ConnectionHandler implements Runnable {
             case LOGIN_USER_ALREADY_ONLINE:
             default:
                 Logger.logConnection(this, "Login not allowed for the user " + user.getUsername());
+                user = null;
                 accessResultPacket.setAllowed(false);
                 break;
         }
@@ -177,6 +178,7 @@ public class ConnectionHandler implements Runnable {
             case REGISTRATION_USER_ALREADY_ONLINE:
             default:
                 Logger.logConnection(this, "Registration not allowed for the user " + user.getUsername());
+                user = null;
                 accessResultPacket.setAllowed(false);
                 break;
         }
