@@ -7,9 +7,6 @@ import java.io.PrintWriter;
 import java.net.Socket;
 
 //Server Packets
-import client.message.parser.MessageParser;
-import server.packets.PacketsDecoder;
-import server.packets.PacketsEncoder;
 
 public class ClientSupporter {
 
@@ -26,24 +23,24 @@ public class ClientSupporter {
         this.createConnection();
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
     public String getHost() {
         return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public int getPort() {
         return port;
     }
 
+    public void setPort(int port) {
+        this.port = port;
+    }
+
     private void createConnection() throws IOException {
-        clientSocket = new Socket(host,port);
+        clientSocket = new Socket(host, port);
         printWriter = new PrintWriter(clientSocket.getOutputStream(), true);
         bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
@@ -54,7 +51,7 @@ public class ClientSupporter {
         return (bufferedReader.readLine());
     }
 
-    public void sendLine(String data){
+    public void sendLine(String data) {
         printWriter.println(data);
     }
 

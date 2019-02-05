@@ -5,7 +5,8 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import server.entities.packets.UnicastMessagePacket;
 import server.packets.PacketsEncoder;
@@ -47,7 +48,7 @@ public class PrivateMessageController extends Application implements Initializab
         this.client = client;
     }
 
-    public void updateMessage(String sender, String message){
+    public void updateMessage(String sender, String message) {
         //messages.ins
     }
 

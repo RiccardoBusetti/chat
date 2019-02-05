@@ -7,14 +7,15 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import server.entities.packets.MulticastMessagePacket;
 import server.packets.PacketsEncoder;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ResourceBundle;
 
 public class ChatController extends Application implements Initializable {
 
@@ -37,7 +38,7 @@ public class ChatController extends Application implements Initializable {
     }
 
     @Override
-    public void stop(){
+    public void stop() {
         System.out.println("Stage is closing");
         try {
             client.closeSocket();
@@ -49,15 +50,15 @@ public class ChatController extends Application implements Initializable {
     }
 
     @FXML
-    public void openFormNewPrivateMessage(ActionEvent event){
+    public void openFormNewPrivateMessage(ActionEvent event) {
 
     }
 
-    public void putMessage(String sender, String receiver, String message){
-        if (receiver == null){
+    public void putMessage(String sender, String receiver, String message) {
+        if (receiver == null) {
             //MULTICAST
             System.out.println("Multicast Message: " + message);
-        }else {
+        } else {
             //UNICAST
             System.out.println("Unicast Message: " + message);
         }
@@ -76,16 +77,16 @@ public class ChatController extends Application implements Initializable {
     }
 
     @FXML
-    public void showAppInfo(ActionEvent event){
+    public void showAppInfo(ActionEvent event) {
         Dialogs.showInfoHeadlessDialog("SampleApplication");
     }
 
-    public void setUsername(String username){
-        this.username = username;
+    public String getUsername() {
+        return username;
     }
 
-    public String getUsername(){
-        return username;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     @Override

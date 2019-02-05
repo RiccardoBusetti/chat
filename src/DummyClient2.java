@@ -1,5 +1,4 @@
 import server.entities.packets.AccessPacket;
-import server.entities.packets.Packet;
 import server.packets.PacketsEncoder;
 
 import java.io.BufferedReader;

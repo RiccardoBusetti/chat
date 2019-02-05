@@ -1,6 +1,5 @@
 package client;
 
-import client.constants.Constants;
 import client.controller.LoginController;
 import client.handlers.ClientSupporter;
 import client.handlers.Dialogs;
@@ -10,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import server.constants.Constants;
 
 public class Main extends Application {
 
@@ -20,16 +20,16 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        FXMLLoader loader = new FXMLLoader( Main.class.getResource( "views/LoginApplication.fxml" ) );
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/LoginApplication.fxml"));
         Parent root = loader.load();
         ClientSupporter client = null;
-        try{
+        try {
             client = new ClientSupporter(Constants.SERVER_HOST, Constants.SERVER_PORT);
-        }catch (Exception e){
+        } catch (Exception e) {
             Dialogs.showErrorDialog("Connection error", "Cannot connect to the server");
             System.exit(1);
         }
-        
+
         //Parent root = FXMLLoader.load(SampleApplication.class.getResource("views/ChatApplication.fxml"));
         Scene scene = new Scene(root);
         LoginController rc = loader.getController();

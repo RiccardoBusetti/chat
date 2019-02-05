@@ -1,33 +1,36 @@
 package client.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-// ------------------------------------------------
-// CLIENT IMPORTS
+import client.Main;
 import client.handlers.ClientReader;
 import client.handlers.ClientSupporter;
 import client.handlers.Dialogs;
-import client.Main;
 import client.handlers.Sound;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.stage.Stage;
 import server.entities.packets.AccessPacket;
 import server.entities.packets.AccessResultPacket;
 import server.entities.packets.ErrorPacket;
 import server.entities.packets.Packet;
-import server.packets.PacketsEncoder;
 import server.packets.PacketsDecoder;
-// ------------------------------------------------
-import javafx.event.*;
-import javafx.fxml.FXML;
-import javafx.fxml.*;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
-import javafx.scene.media.Media;
-import javafx.stage.*;
+import server.packets.PacketsEncoder;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+// ------------------------------------------------
+// CLIENT IMPORTS
+// ------------------------------------------------
 
 
 public class LoginController implements Initializable {
@@ -56,14 +59,14 @@ public class LoginController implements Initializable {
     }
 
 
-    private boolean connectForLogin(String username, String password){
+    private boolean connectForLogin(String username, String password) {
         boolean result = false;
 
         return result;
     }
 
 
-    private boolean connectForSignin(String username, String password){
+    private boolean connectForSignin(String username, String password) {
         boolean result = false;
 
         return result;
@@ -93,10 +96,10 @@ public class LoginController implements Initializable {
             AccessResultPacket accessResultPacket1;
             try {
                 String response = client.makeRequest(pk.encode(apk));
-                if (! (dpk.decode(response) instanceof AccessResultPacket) ) {
+                if (!(dpk.decode(response) instanceof AccessResultPacket)) {
                     ErrorPacket error = (ErrorPacket) dpk.decode(response);
                     throw new Exception(error.getErrorMessage());
-                }else{
+                } else {
                     accessResultPacket1 = (AccessResultPacket) dpk.decode(response);
                 }
             } catch (IOException e) {
@@ -149,10 +152,10 @@ public class LoginController implements Initializable {
             try {
                 String response = client.makeRequest(pk.encode(apk));
                 Packet accessResultPacket = dpk.decode(response);
-                if (! (dpk.decode(response) instanceof AccessResultPacket) ) {
+                if (!(dpk.decode(response) instanceof AccessResultPacket)) {
                     ErrorPacket error = (ErrorPacket) dpk.decode(response);
                     throw new Exception(error.getErrorMessage());
-                }else{
+                } else {
                     accessResultPacket1 = (AccessResultPacket) dpk.decode(response);
                 }
             } catch (IOException e) {
@@ -181,7 +184,7 @@ public class LoginController implements Initializable {
 
     private void gotoChat(String username) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader( Main.class.getResource( "views/ChatApplication.fxml" ) );
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/ChatApplication.fxml"));
         Parent root = loader.load();
 
         //Parent root = FXMLLoader.load(SampleApplication.class.getResource("views/ChatApplication.fxml"));

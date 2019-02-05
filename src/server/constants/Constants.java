@@ -1,5 +1,7 @@
 package server.constants;
 
+import java.nio.file.Paths;
+
 /**
  * Class containing all the constants used in the server.
  */
@@ -27,4 +29,13 @@ public class Constants {
 
     // Null constants.
     public static final String NO_DATE = "-1";
+
+    // Paths constants.
+    public static final String OOF_SFX = Paths.get(System.getProperty("user.dir"), "src", "client", "assets", "oof.mp3").toString();
+    public static final String CHAT_BOOT_SFX = Paths.get(System.getProperty("user.dir"), "src", "client", "assets", "chat_boot.mp3").toString();
+    public static final String CHAT_NEW_MESSAGE = Paths.get(System.getProperty("user.dir"), "src", "client", "assets", "chat_new.mp3").toString();
+
+    // Server constants.
+    public static final String SERVER_HOST = "localhost";
+    public static final int SERVER_PORT = 8888;
 }

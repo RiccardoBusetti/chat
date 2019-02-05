@@ -10,7 +10,7 @@ public class PacketsUtils {
      * Needed for encoding the hex ascii to ascii char
      */
     public static String hexToAscii(String hexStr) {
-        StringBuilder output = new StringBuilder("");
+        StringBuilder output = new StringBuilder();
 
         for (int i = 0; i < hexStr.length(); i += 2) {
             String str = hexStr.substring(i, i + 2);

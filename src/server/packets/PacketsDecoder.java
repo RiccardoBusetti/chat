@@ -85,7 +85,8 @@ public class PacketsDecoder {
      * @throws MalformedPacketException thrown when the packet is malformed.
      */
     private String[] validatePacket(String packet) throws MalformedPacketException {
-        if (packet == null || packet.equals("")) throw new MalformedPacketException("The packet is null or empty.", true);
+        if (packet == null || packet.equals(""))
+            throw new MalformedPacketException("The packet is null or empty.", true);
 
         String[] packetFields = packet.split(PacketsUtils.hexToAscii(Constants.DIVIDE_REGEX));
 
