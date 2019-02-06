@@ -2,34 +2,45 @@ package client.controller;
 
 import client.handlers.ClientSupporter;
 import client.handlers.Dialogs;
+import client.handlers.MessageList;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import javafx.util.Pair;
+import server.entities.User;
 import server.entities.packets.MulticastMessagePacket;
 import server.packets.PacketsEncoder;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Observable;
 import java.util.ResourceBundle;
 
 public class ChatController extends Application implements Initializable {
 
     private String username;
     private ClientSupporter client;
+    private ObservableList<Pair<String, String>> multicastMessageList;
 
     @FXML
     private TextArea messageText;
     @FXML
     private Button sendButton;
 
+    @FXML
+    private ListView multicastList;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        multicastMessageList = FXCollections.observableArrayList(MessageList.getInstance().getAllMessages());
     }
 
     @Override
