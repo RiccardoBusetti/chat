@@ -65,6 +65,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
             if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
 
             OnlineUsers.getInstance().removeUser(username);
+            OnlineUsers.getInstance().notifyClients();
 
             Logger.logRegistration(this, "User " + username + " blocked.");
         } catch (UserNotFoundException exc) {
