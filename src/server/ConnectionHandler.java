@@ -76,9 +76,16 @@ public class ConnectionHandler implements Runnable {
         handleMessages(bufferedReader);
     }
 
+    /**
+     * Handles the access to the service.
+     * @param bufferedReader
+     * @throws IOException
+     */
     private void handleAccess(BufferedReader bufferedReader) throws IOException {
         boolean isAllowed = false;
         PacketsDecoder packetsDecoder = new PacketsDecoder();
+
+        bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         while (!isAllowed && !stop) {
             String inputString = bufferedReader.readLine();
@@ -190,6 +197,8 @@ public class ConnectionHandler implements Runnable {
     private void handleMessages(BufferedReader bufferedReader) throws IOException {
         PacketsDecoder packetsDecoder = new PacketsDecoder();
 
+        bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+
         while (!stop) {
             String inputString = bufferedReader.readLine();
 
@@ -211,7 +220,7 @@ public class ConnectionHandler implements Runnable {
 
                     handleMulticastMessage(multicastMessagePacket);
                 } else {
-                    sendErrorMessage("Il messaggio da te inviato ha un formato errato, riprova.");
+                    sendErrorMessage("Il messaggio da te inviato ha un formato errato o è stato corrotto, riprova.");
                 }
             } else {
                 Logger.logStatus(this, "Received null line from the client, disconnection in progress...");

@@ -21,7 +21,7 @@ public class PacketsDecoder {
             Logger.logStatus(this, "Decoding packet.");
 
             return decodePacket(packet);
-        } catch (MalformedPacketException exc) {
+        } catch (MalformedPacketException | ArrayIndexOutOfBoundsException exc) {
             Logger.logError(this, exc.getMessage());
         }
 

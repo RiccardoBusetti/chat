@@ -25,7 +25,7 @@ public class PacketsEncoder {
             Logger.logStatus(this, "Encoding packet.");
 
             return encodePacket(packet);
-        } catch (MalformedPacketException exc) {
+        } catch (MalformedPacketException | ArrayIndexOutOfBoundsException exc) {
             Logger.logError(this, exc.getMessage());
         }
 
