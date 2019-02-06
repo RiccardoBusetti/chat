@@ -32,6 +32,9 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
         return instance;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void addUser(User user, Socket information) {
         onlineUsers.add(new Pair<>(user, information));
@@ -41,6 +44,9 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
         Logger.logConnection(this, "User " + user.getUsername() + " connected!");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void removeUser(String username) {
         try {
@@ -56,6 +62,9 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void removeAllUsers() {
         onlineUsers.clear();
@@ -63,16 +72,25 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
         if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized Pair<User, Socket> getUserByUsername(String username) throws UserNotFoundException {
         return searchUserByUsername(username, onlineUsers, false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized List<Pair<User, Socket>> getAllUsers() {
         return onlineUsers;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void observe(UsersObserver<User, Socket> usersObserver) {
         attachObserver(usersObserver);
