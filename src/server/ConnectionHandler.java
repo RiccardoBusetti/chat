@@ -111,6 +111,7 @@ public class ConnectionHandler implements Runnable {
 
                     // Adds the result message to the queue.
                     PacketsQueue.getInstance().sendPacket(dispatchablePacket);
+                    OnlineUsers.getInstance().notifyClients();
                 } else {
                     sendErrorMessage("Prima di inviare messaggi devi fare l'accesso.");
                 }
@@ -309,6 +310,7 @@ public class ConnectionHandler implements Runnable {
         // if yes we will remove it from the online users.
         if (user != null && user.getUsername() != null) {
             OnlineUsers.getInstance().removeUser(user.getUsername());
+            OnlineUsers.getInstance().notifyClients();
         }
 
         // We set stop to true in order to stop the current loop in which the thread

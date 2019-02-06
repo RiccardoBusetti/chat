@@ -2,8 +2,12 @@ package server.users;
 
 import javafx.util.Pair;
 import server.entities.User;
+import server.entities.packets.DispatchablePacket;
+import server.entities.packets.OnlineUsersPacket;
 import server.exceptions.UserNotFoundException;
 import server.logging.Logger;
+import server.packets.PacketsDispatcher;
+import server.packets.PacketsQueue;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -28,6 +32,9 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
         return instance;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void addUser(User user, Socket information) {
         onlineUsers.add(new Pair<>(user, information));
@@ -37,6 +44,9 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
         Logger.logConnection(this, "User " + user.getUsername() + " connected!");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void removeUser(String username) {
         try {
@@ -52,23 +62,57 @@ public class OnlineUsers extends ServiceUsers<User, Socket> {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void removeAllUsers() {
         onlineUsers.clear();
+
+        if (isObserverAttached()) usersObserver.onUsersChanged(getAllUsers());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized Pair<User, Socket> getUserByUsername(String username) throws UserNotFoundException {
         return searchUserByUsername(username, onlineUsers, false);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized List<Pair<User, Socket>> getAllUsers() {
         return onlineUsers;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public synchronized void observe(UsersObserver<User, Socket> usersObserver) {
         attachObserver(usersObserver);
+    }
+
+    /**
+     * Notifies all the connected clients about the current state
+     * of online users.
+     */
+    public void notifyClients() {
+        DispatchablePacket dispatchablePacket = new DispatchablePacket();
+        List<Socket> onlineUsersSockets = new ArrayList<>();
+        OnlineUsersPacket onlineUsersPacket = new OnlineUsersPacket();
+
+        for (Pair<User, Socket> onlineUser : getAllUsers()) {
+            onlineUsersPacket.addUser(onlineUser.getKey().getUsername());
+            onlineUsersSockets.add(onlineUser.getValue());
+        }
+
+        dispatchablePacket.setRecipientsSockets(onlineUsersSockets);
+        dispatchablePacket.setPacket(onlineUsersPacket);
+
+        PacketsQueue.getInstance().sendPacket(dispatchablePacket);
     }
 }
