@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import server.entities.User;
@@ -41,12 +42,15 @@ public class ChatController extends Application implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         multicastMessageList = FXCollections.observableArrayList(MessageList.getInstance().getAllMessages());
+        multicastList.setItems(multicastMessageList);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
     }
+
+
 
     @Override
     public void stop() {
@@ -69,6 +73,7 @@ public class ChatController extends Application implements Initializable {
         if (receiver == null) {
             //MULTICAST
             System.out.println("Multicast Message: " + message);
+            multicastMessageList.add(new Pair<>(sender, message.replace("\b", "\n")));
         } else {
             //UNICAST
             System.out.println("Unicast Message: " + message);
@@ -78,8 +83,11 @@ public class ChatController extends Application implements Initializable {
     @FXML
     public void sendMulticastMessage(ActionEvent event) throws IOException {
         PacketsEncoder packetsEncoder = new PacketsEncoder();
+        messageText.setText(messageText.getText().replace("\n", "\b"));
         System.out.println(messageText.getText());
         client.sendLine(packetsEncoder.encode(new MulticastMessagePacket(this.username, messageText.getText())));
+        this.putMessage(username, null, messageText.getText());
+        this.messageText.clear();
     }
 
     @FXML
@@ -107,5 +115,13 @@ public class ChatController extends Application implements Initializable {
 
     public void setClient(ClientSupporter client) {
         this.client = client;
+    }
+
+    public void checkEnterKey(KeyEvent keyEvent) throws IOException {
+        if (keyEvent.getCode().toString().equals("ENTER")){
+            this.sendMulticastMessage(null);
+            this.messageText.clear();
+        }
+
     }
 }

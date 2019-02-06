@@ -11,7 +11,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import server.constants.Constants;
 
-public class Main extends Application {
+public class Main2 extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -20,7 +20,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/LoginApplication.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main2.class.getResource("views/LoginApplication.fxml"));
         Parent root = loader.load();
         ClientSupporter client = null;
         try {
