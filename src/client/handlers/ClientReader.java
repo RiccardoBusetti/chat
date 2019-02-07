@@ -35,9 +35,9 @@ public class ClientReader extends Thread {
                     Packet output = packetsDecoder.decode(line);
                     System.out.println(output instanceof AccessResultPacket);
                     if (output instanceof MulticastMessagePacket)
-                        chatController.putMessage(((MulticastMessagePacket) output).getSenderUsername(), null, ((MulticastMessagePacket) output).getContent());
+                        chatController.showMessage(((MulticastMessagePacket) output).getSenderUsername(), null, ((MulticastMessagePacket) output).getContent());
                     else if (output instanceof UnicastMessagePacket)
-                        chatController.putMessage(((UnicastMessagePacket) output).getSenderUsername(), ((UnicastMessagePacket) output).getRecipientUsername(), ((UnicastMessagePacket) output).getContent());
+                        chatController.showMessage(((UnicastMessagePacket) output).getSenderUsername(), ((UnicastMessagePacket) output).getRecipientUsername(), ((UnicastMessagePacket) output).getContent());
                     else
                         System.out.println(line);
                 } else {
