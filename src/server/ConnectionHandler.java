@@ -70,22 +70,22 @@ public class ConnectionHandler implements Runnable {
 
         // Handles the access, because before being able
         // to send new messages the user needs to be authenticated.
-        handleAccess(bufferedReader);
+        handleAccess();
 
         // After the user is authenticated now we can accept messages.
-        handleMessages(bufferedReader);
+        handleMessages();
     }
 
     /**
      * Handles the access to the service.
-     * @param bufferedReader
-     * @throws IOException
+     *
+     * @throws IOException thrown when the is a problem with the streams.
      */
-    private void handleAccess(BufferedReader bufferedReader) throws IOException {
+    private void handleAccess() throws IOException {
         boolean isAllowed = false;
         PacketsDecoder packetsDecoder = new PacketsDecoder();
 
-        bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         while (!isAllowed && !stop) {
             String inputString = bufferedReader.readLine();
@@ -129,6 +129,12 @@ public class ConnectionHandler implements Runnable {
         }
     }
 
+    /**
+     * Handles the login.
+     *
+     * @param accessPacket packet that contains the user credentials.
+     * @return the result packer.
+     */
     private AccessResultPacket handleLogin(AccessPacket accessPacket) {
         Logger.logStatus(this, "Handling login with the client " + clientSocket.getRemoteSocketAddress());
 
@@ -162,6 +168,12 @@ public class ConnectionHandler implements Runnable {
         return accessResultPacket;
     }
 
+    /**
+     * Handles the registration.
+     *
+     * @param accessPacket packet that contains the user credentials.
+     * @return the result packer.
+     */
     private AccessResultPacket handleRegister(AccessPacket accessPacket) {
         Logger.logStatus(this, "Handling registration with the client " + clientSocket.getRemoteSocketAddress());
 
@@ -194,10 +206,16 @@ public class ConnectionHandler implements Runnable {
         return accessResultPacket;
     }
 
-    private void handleMessages(BufferedReader bufferedReader) throws IOException {
+    /**
+     * Handles the messages that will be sent by the
+     * different clients.
+     *
+     * @throws IOException thrown when the is a problem with the streams.
+     */
+    private void handleMessages() throws IOException {
         PacketsDecoder packetsDecoder = new PacketsDecoder();
 
-        bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
         while (!stop) {
             String inputString = bufferedReader.readLine();
@@ -229,6 +247,11 @@ public class ConnectionHandler implements Runnable {
         }
     }
 
+    /**
+     * Handles the unicast message packet.
+     *
+     * @param unicastMessagePacket packet that contains the unicast message.
+     */
     private void handleUnicastMessage(UnicastMessagePacket unicastMessagePacket) {
         try {
             Pair<User, Socket> recipientUser = OnlineUsers.getInstance().getUserByUsername(unicastMessagePacket.getRecipientUsername());
@@ -249,6 +272,11 @@ public class ConnectionHandler implements Runnable {
         }
     }
 
+    /**
+     * Handles the multicast message packet.
+     *
+     * @param multicastMessagePacket packet that contains the multicast message.
+     */
     private void handleMulticastMessage(MulticastMessagePacket multicastMessagePacket) {
         // Gets all the users that are currently online.
         List<Pair<User, Socket>> onlineUsers = OnlineUsers.getInstance().getAllUsers();
@@ -279,6 +307,12 @@ public class ConnectionHandler implements Runnable {
         }
     }
 
+    /**
+     * Sends a message result packet that tells the sender if
+     * the message was received and dispatched by the server or not.
+     *
+     * @param isReceived true if the message is received and dispatched, false otherwise.
+     */
     private void sendMessageResult(boolean isReceived) {
         // Building the packet which will notify the client that the
         // message has been received by the server.
@@ -295,6 +329,12 @@ public class ConnectionHandler implements Runnable {
         PacketsQueue.getInstance().sendPacket(dispatchablePacket);
     }
 
+    /**
+     * Send an error message to the client to notify it about some
+     * errors happening in the server.
+     *
+     * @param errorMessage message that will be shown by the client as an error.
+     */
     private void sendErrorMessage(String errorMessage) {
         ErrorPacket errorPacket = new ErrorPacket(errorMessage);
 
@@ -307,6 +347,9 @@ public class ConnectionHandler implements Runnable {
         PacketsQueue.getInstance().sendPacket(dispatchablePacket);
     }
 
+    /**
+     * Disconnects the client from the server by closing the connection.
+     */
     private void disconnectClient() {
         try {
             // Closing the connection with the client.
