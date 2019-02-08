@@ -28,7 +28,7 @@ public class MessageListCellView extends ListCell<Pair<String, String>> {
 
         if (item != null && !empty) {
             try {
-                String location = item.getKey().equals(username) ? "../views/RightMessageListCellView.fxml" : "../views/LeftMessageListCellView.fxml";
+                String location = item.getKey().equals(username) ? "../views/list/RightMessageListCellView.fxml" : "../views/list/LeftMessageListCellView.fxml";
 
                 FXMLLoader loader = new FXMLLoader(MessageListCellView.class.getResource(location));
                 loader.setController(this);

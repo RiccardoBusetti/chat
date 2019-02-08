@@ -6,6 +6,7 @@ import client.handlers.ClientSupporter;
 import client.handlers.Dialogs;
 import client.handlers.Sound;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -17,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import server.entities.packets.AccessPacket;
 import server.entities.packets.AccessResultPacket;
 import server.entities.packets.ErrorPacket;
@@ -200,7 +202,14 @@ public class LoginController implements Initializable {
         stage.setScene(scene);
         this.stage.hide();
         stage.show();
-        new ClientReader(client, rc).start();
+        ClientReader clientReader = new ClientReader(client, rc);
+        clientReader.start();
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            public void handle(WindowEvent we) {
+                clientReader.close();
+            }
+        });
+
 
     }
 

@@ -1,13 +1,11 @@
 package client.handlers;
 
 import client.controller.ChatController;
-import server.entities.packets.AccessResultPacket;
-import server.entities.packets.MulticastMessagePacket;
-import server.entities.packets.Packet;
-import server.entities.packets.UnicastMessagePacket;
+import server.entities.packets.*;
 import server.packets.PacketsDecoder;
 
 import java.io.IOException;
+import java.net.SocketException;
 
 public class ClientReader extends Thread {
 
@@ -27,6 +25,9 @@ public class ClientReader extends Thread {
                 String line = null;
                 try {
                     line = clientSupporter.readLine();
+                } catch (SocketException e) {
+                    System.out.println("Closing the thread...");
+                    System.exit(-1);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -38,12 +39,23 @@ public class ClientReader extends Thread {
                         chatController.showMessage(((MulticastMessagePacket) output).getSenderUsername(), null, ((MulticastMessagePacket) output).getContent());
                     else if (output instanceof UnicastMessagePacket)
                         chatController.showMessage(((UnicastMessagePacket) output).getSenderUsername(), ((UnicastMessagePacket) output).getRecipientUsername(), ((UnicastMessagePacket) output).getContent());
+                    else if (output instanceof OnlineUsersPacket)
+                        chatController.changeOnlineUserList(((OnlineUsersPacket) output).getUsers());
                     else
                         System.out.println(line);
                 } else {
                     break;
                 }
             }
+        }
+    }
+
+    public void close() {
+        try {
+            clientSupporter.closeSocket();
+        } catch (Exception e) {
+            System.out.println("Impossible close manually the connection...");
+            System.exit(-1);
         }
     }
 }
