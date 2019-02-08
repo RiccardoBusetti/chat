@@ -1,24 +1,26 @@
 package client.controller;
 
+import client.Main;
 import client.cellviews.MessageListCellView;
+import client.handlers.ClientReader;
 import client.handlers.ClientSupporter;
 import client.handlers.Dialogs;
 import client.handlers.MessageList;
-import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Pair;
 import server.entities.packets.MulticastMessagePacket;
 import server.packets.PacketsEncoder;
@@ -58,7 +60,19 @@ public class ChatController {
     }
 
     @FXML
-    public void openFormNewPrivateMessage(ActionEvent event) {
+    public void openFormNewPrivateMessage(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/NewPrivateChatApplication.fxml"));
+        Parent root = loader.load();
+
+        Scene scene = new Scene(root);
+        NewPrivateChatController controller = loader.getController();
+
+        controller.setUpList(onlineUsers, null);
+
+        Stage stage = new Stage();
+        stage.setTitle("");
+        stage.setScene(scene);
+        stage.show();
     }
 
     @FXML
@@ -92,8 +106,7 @@ public class ChatController {
     @FXML
     private void sendMulticastMessage() {
 
-        String temp = messageText.getText().replace("\n", "");
-        if (temp.length() == 0)
+        if (messageText.getText().replace("\n", "").length() == 0)
         {
             messageText.clear();
             return;

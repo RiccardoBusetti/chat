@@ -25,23 +25,22 @@ public class Main2 extends Application {
         ClientSupporter client = null;
         try {
             client = new ClientSupporter(Constants.SERVER_HOST, Constants.SERVER_PORT);
+
+            Scene scene = new Scene(root);
+            LoginController rc = loader.getController();
+            rc.setClient(client);
+
+            Stage stage = new Stage();
+            stage.setTitle("");
+            stage.setScene(scene);
+            rc.setStage(stage);
+            stage.show();
         } catch (Exception e) {
             Dialogs.showErrorDialog("Connection error", "Cannot connect to the server");
             System.exit(1);
         }
 
-        //Parent root = FXMLLoader.load(SampleApplication.class.getResource("views/ChatApplication.fxml"));
-        Scene scene = new Scene(root);
-        LoginController rc = loader.getController();
-        rc.setClient(client);
 
-        Sound.playBoot();
-
-        Stage stage = new Stage();
-        stage.setTitle("");
-        stage.setScene(scene);
-        rc.setStage(stage);
-        stage.show();
 
     }
 }

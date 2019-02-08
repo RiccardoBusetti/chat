@@ -35,8 +35,6 @@ public class Main extends Application {
         LoginController rc = loader.getController();
         rc.setClient(client);
 
-        Sound.playBoot();
-
         Stage stage = new Stage();
         stage.setTitle("");
         stage.setScene(scene);

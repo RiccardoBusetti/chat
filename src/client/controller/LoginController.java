@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -219,5 +220,10 @@ public class LoginController implements Initializable {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void checkEnterButton(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ENTER)
+            makeLogin(null);
     }
 }
