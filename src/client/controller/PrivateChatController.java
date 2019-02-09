@@ -1,23 +1,44 @@
 package client.controller;
 
+import client.handlers.Chat;
 import client.handlers.ClientSupporter;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import server.entities.packets.UnicastMessagePacket;
 import server.packets.PacketsEncoder;
-
-import java.io.IOException;
 
 public class PrivateChatController{
 
     private ClientSupporter client;
     private String sender, receiver;
 
-    private TextArea messageArea;
-    private ListView messages;
+    public Button sendButton;
+    public ListView messageList;
+    public TextField inputMessage;
 
+    private Chat chatData;
+
+    private ObservableList<String> observableListMessages;
+
+    public PrivateChatController(){
+
+    }
+
+    public void setChatData(Chat chat){
+        this.chatData = chat;
+    }
+
+    public void setUpUI(){
+        observableListMessages = FXCollections.observableArrayList(chatData.getMessages());
+        messageList.setItems(observableListMessages);
+    }
 
     public String getSender() {
         return sender;
@@ -39,13 +60,17 @@ public class PrivateChatController{
         this.client = client;
     }
 
-    public void updateMessage(String sender, String message) {
-        //messages.ins
+    @FXML
+    public void sendUnicastMessage(ActionEvent event) {
+        PacketsEncoder packetsEncoder = new PacketsEncoder();
+        client.sendLine(packetsEncoder.encode(new UnicastMessagePacket(sender, receiver, inputMessage.getText())));
+        chatData.addMessage(sender, inputMessage.getText());
+        inputMessage.clear();
     }
 
-    @FXML
-    public void sendUnicastMessage(ActionEvent event) throws IOException {
-        PacketsEncoder packetsEncoder = new PacketsEncoder();
-        client.sendLine(packetsEncoder.encode(new UnicastMessagePacket(sender, receiver, messageArea.getText())));
+    public void checkIfEnter(KeyEvent keyEvent) {
+        if (keyEvent.getCode() == KeyCode.ENTER)  {
+            sendUnicastMessage(null);
+        }
     }
 }

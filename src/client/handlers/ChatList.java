@@ -18,4 +18,17 @@ public class ChatList {
         receivers.add(user);
     }
 
+    public void addChat(Chat chat, String user){
+        chatList.add(chat);
+        receivers.add(user);
+    }
+
+    public List<String> getUsers(){
+        return receivers;
+    }
+
+    public Chat getChat(int i){
+        return chatList.get(i);
+    }
+
 }

@@ -2,10 +2,7 @@ package client.controller;
 
 import client.Main;
 import client.cellviews.MessageListCellView;
-import client.handlers.ClientReader;
-import client.handlers.ClientSupporter;
-import client.handlers.Dialogs;
-import client.handlers.MessageList;
+import client.handlers.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,6 +34,7 @@ public class ChatController {
     private ObservableList<Pair<String, String>> multicastMessageList;
     @FXML
     private ObservableList<String> onlineUsers;
+    private ChatList privateChatList;
 
     @FXML
     private TextArea messageText;
@@ -48,6 +46,7 @@ public class ChatController {
     public ChatController() {
         multicastMessageList = FXCollections.observableArrayList(MessageList.getInstance().getAllMessages());
         onlineUsers = FXCollections.observableArrayList();
+        privateChatList = new ChatList();
     }
 
     @FXML
@@ -67,13 +66,17 @@ public class ChatController {
         Scene scene = new Scene(root);
         NewPrivateChatController controller = loader.getController();
 
-        controller.setUpList(onlineUsers, null);
-
+        controller.setUpList(onlineUsers, privateChatList.getUsers(), username);
+        controller.setClient(client);
         controller.setUpUI();
+        controller.setTempList(privateChatList);
 
         Stage stage = new Stage();
-        stage.setTitle("");
+        stage.setTitle("New Chat...");
         stage.setScene(scene);
+
+        controller.setStage(stage);
+
         stage.show();
     }
 

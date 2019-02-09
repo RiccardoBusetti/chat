@@ -24,4 +24,12 @@ public class Chat {
         return new Pair<>(senders.get(i), messages.get(i));
     }
 
+    public int getAmountMessage(){
+        return messages.size();
+    }
+
+    public List<String> getMessages(){
+        return messages;
+    }
+
 }
