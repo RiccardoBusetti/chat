@@ -69,6 +69,8 @@ public class ChatController {
 
         controller.setUpList(onlineUsers, null);
 
+        controller.setUpUI();
+
         Stage stage = new Stage();
         stage.setTitle("");
         stage.setScene(scene);
