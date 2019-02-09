@@ -7,7 +7,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,18 +22,17 @@ import server.entities.packets.MulticastMessagePacket;
 import server.packets.PacketsEncoder;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class ChatController {
 
     private String username;
     private ClientSupporter client;
-    private ObservableList<Pair<String, String>> multicastMessageList;
-    @FXML
-    private ObservableList<String> onlineUsers;
     private ChatList privateChatList;
+
+    private ObservableList<Pair<String, String>> multicastMessageList;
+    private ObservableList<String> onlineUsers;
+    private ObservableList<String> privateChatUsersList;
 
     @FXML
     private TextArea messageText;
@@ -42,11 +40,14 @@ public class ChatController {
     private Button sendButton;
     @FXML
     private ListView multicastList;
+    @FXML
+    private ListView privateMessageList;
 
     public ChatController() {
         multicastMessageList = FXCollections.observableArrayList(MessageList.getInstance().getAllMessages());
+        privateChatUsersList = FXCollections.observableArrayList(ChatList.getInstance().getUsers());
         onlineUsers = FXCollections.observableArrayList();
-        privateChatList = new ChatList();
+        privateChatList = ChatList.getInstance();
     }
 
     @FXML
@@ -94,6 +95,7 @@ public class ChatController {
     private void setUpUI() {
         multicastList.setItems(multicastMessageList);
         multicastList.setCellFactory(param -> new MessageListCellView(username));
+        privateMessageList.setItems(privateChatUsersList);
         addListeners();
     }
 
@@ -103,9 +105,8 @@ public class ChatController {
 
     @FXML
     private void checkEnterKey(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER)  {
+        if (event.getCode() == KeyCode.ENTER)
             sendMulticastMessage();
-        }
     }
 
     @FXML
@@ -133,7 +134,28 @@ public class ChatController {
             multicastMessageList.add(new Pair<>(sender, message));
         } else {
             // Unicast message.
-            // TODO: handle unicast message.
+            if (receiver.equals(username)) {
+                boolean found = false;
+
+                for (int i = 0; i < privateChatList.getSize(); i++)
+                    if (sender.equals(privateChatList.getUsers().get(i))){
+                        privateChatList.getChat(i).addMessage(sender, message);
+                        found = true;
+                    }
+
+                if (!found){
+                    System.out.println("New Chat!");
+                    Chat chat = new Chat();
+                    privateChatList.addChat(chat, sender);
+                    chat.addMessage(sender, message);
+                }
+                else {
+                    System.out.println("New message!");
+                }
+            }else {
+                System.out.println("Unicast ignored due to not matching username");
+            }
+
         }
     }
 

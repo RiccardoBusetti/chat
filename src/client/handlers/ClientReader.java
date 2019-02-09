@@ -34,15 +34,16 @@ public class ClientReader extends Thread {
                 if (line != null) {
                     System.out.println(line);
                     Packet output = packetsDecoder.decode(line);
-                    System.out.println(output instanceof AccessResultPacket);
                     if (output instanceof MulticastMessagePacket)
                         chatController.showMessage(((MulticastMessagePacket) output).getSenderUsername(), null, ((MulticastMessagePacket) output).getContent());
                     else if (output instanceof UnicastMessagePacket)
                         chatController.showMessage(((UnicastMessagePacket) output).getSenderUsername(), ((UnicastMessagePacket) output).getRecipientUsername(), ((UnicastMessagePacket) output).getContent());
                     else if (output instanceof OnlineUsersPacket)
                         chatController.changeOnlineUserList(((OnlineUsersPacket) output).getUsers());
+                    else if (output instanceof ErrorPacket)
+                        Dialogs.showErrorDialog("Communication error", ((ErrorPacket) output).getErrorMessage());
                     else
-                        System.out.println(line);
+                        System.out.println("Unknown message: " + line);
                 } else {
                     break;
                 }

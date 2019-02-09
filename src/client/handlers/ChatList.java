@@ -5,12 +5,20 @@ import java.util.List;
 
 public class ChatList {
 
+    private static ChatList instance;
+
     private List<Chat> chatList;
     private List<String> receivers;
 
     public ChatList(){
         chatList = new ArrayList<>();
         receivers = new ArrayList<>();
+    }
+
+    public static ChatList getInstance() {
+        if (instance == null) instance = new ChatList();
+
+        return instance;
     }
 
     public void addChat(String user){
@@ -31,4 +39,7 @@ public class ChatList {
         return chatList.get(i);
     }
 
+    public int getSize() {
+        return chatList.size();
+    }
 }

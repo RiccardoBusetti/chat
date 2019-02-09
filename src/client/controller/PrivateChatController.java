@@ -62,6 +62,11 @@ public class PrivateChatController{
 
     @FXML
     public void sendUnicastMessage(ActionEvent event) {
+        if (inputMessage.getText().replace("\n", "").length() == 0)
+        {
+            inputMessage.clear();
+            return;
+        }
         PacketsEncoder packetsEncoder = new PacketsEncoder();
         client.sendLine(packetsEncoder.encode(new UnicastMessagePacket(sender, receiver, inputMessage.getText())));
         chatData.addMessage(sender, inputMessage.getText());

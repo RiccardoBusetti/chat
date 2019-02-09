@@ -45,7 +45,7 @@
                                 <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
                             </textFill>
                         </Label>
-                        <ListView id="privateChatList" fx:id="onlineUsersList" layoutY="96.0" prefHeight="454.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="96.0" />
+                        <ListView id="privateChatList" fx:id="privateMessageList" layoutY="96.0" prefHeight="454.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="96.0" />
                         <Separator layoutY="91.0" prefHeight="6.0" prefWidth="232.0" />
                         <Button fx:id="newPMButton" layoutY="41.0" mnemonicParsing="false" onAction="#openFormNewPrivateMessage" prefHeight="54.0" prefWidth="232.0" text="New Private Message..." AnchorPane.bottomAnchor="455.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="41.0" />
                     </children>
