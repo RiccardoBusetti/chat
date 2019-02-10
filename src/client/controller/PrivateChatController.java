@@ -1,5 +1,6 @@
 package client.controller;
 
+import client.cellviews.MessageListCellView;
 import client.handlers.Chat;
 import client.handlers.ClientSupporter;
 import javafx.collections.FXCollections;
@@ -11,6 +12,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Pair;
 import server.entities.packets.UnicastMessagePacket;
 import server.packets.PacketsEncoder;
 
@@ -25,7 +27,7 @@ public class PrivateChatController{
 
     private Chat chatData;
 
-    private ObservableList<String> observableListMessages;
+    private ObservableList<Pair<String, String>> observableListMessages;
 
     public PrivateChatController(){
 
@@ -38,6 +40,7 @@ public class PrivateChatController{
     public void setUpUI(){
         observableListMessages = FXCollections.observableArrayList(chatData.getMessages());
         messageList.setItems(observableListMessages);
+        messageList.setCellFactory(param -> new MessageListCellView(sender));
     }
 
     public String getSender() {

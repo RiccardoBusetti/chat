@@ -16,6 +16,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import server.entities.packets.MulticastMessagePacket;
@@ -28,11 +29,12 @@ public class ChatController {
 
     private String username;
     private ClientSupporter client;
-    private ChatList privateChatList;
+    private ChatListV2 chatList;
 
     private ObservableList<Pair<String, String>> multicastMessageList;
     private ObservableList<String> onlineUsers;
-    private ObservableList<String> privateChatUsersList;
+    private ObservableList<Pair<String, Chat>> privateChatUsersList;
+    private ObservableList<String> pmChatSaved;
 
     @FXML
     private TextArea messageText;
@@ -44,10 +46,11 @@ public class ChatController {
     private ListView privateMessageList;
 
     public ChatController() {
+        chatList = ChatListV2.getInstance();
         multicastMessageList = FXCollections.observableArrayList(MessageList.getInstance().getAllMessages());
-        privateChatUsersList = FXCollections.observableArrayList(ChatList.getInstance().getUsers());
+        privateChatUsersList = FXCollections.observableArrayList(chatList.getAllChats());
+        pmChatSaved = FXCollections.observableArrayList();
         onlineUsers = FXCollections.observableArrayList();
-        privateChatList = ChatList.getInstance();
     }
 
     @FXML
@@ -67,10 +70,11 @@ public class ChatController {
         Scene scene = new Scene(root);
         NewPrivateChatController controller = loader.getController();
 
-        controller.setUpList(onlineUsers, privateChatList.getUsers(), username);
+        controller.setUpList(onlineUsers, pmChatSaved, username);
         controller.setClient(client);
         controller.setUpUI();
-        controller.setTempList(privateChatList);
+        controller.setTempList(privateChatUsersList);
+        controller.setPmList(pmChatSaved);
 
         Stage stage = new Stage();
         stage.setTitle("New Chat...");
@@ -95,7 +99,7 @@ public class ChatController {
     private void setUpUI() {
         multicastList.setItems(multicastMessageList);
         multicastList.setCellFactory(param -> new MessageListCellView(username));
-        privateMessageList.setItems(privateChatUsersList);
+        privateMessageList.setItems(pmChatSaved);
         addListeners();
     }
 
@@ -107,6 +111,46 @@ public class ChatController {
     private void checkEnterKey(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER)
             sendMulticastMessage();
+    }
+
+    @FXML
+    private void openChat(MouseEvent mouseEvent) throws IOException {
+        String receiver = privateMessageList.getSelectionModel().getSelectedItem().toString();
+
+        int location = 0;
+        boolean found = false;
+        for (int i = 0; i < pmChatSaved.size(); i++){
+            if (found)
+                continue;
+            if (pmChatSaved.get(i).equals(receiver)){
+                found = true;
+                location = i;
+            }
+        }
+
+        Chat data = privateChatUsersList.get(location).getValue();
+
+        //Open view
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PrivateChatApplication.fxml"));
+        Parent root = loader.load();
+
+        //Prepare scene
+        Scene scene = new Scene(root);
+        PrivateChatController controller = loader.getController();
+
+        //Controller settings
+        controller.setChatData(data);
+        controller.setSender(username);
+        controller.setReceiver(receiver);
+        controller.setClient(client);
+        controller.setUpUI();
+
+        //Open stage
+        Stage stage = new Stage();
+        stage.setTitle(receiver); //Title is user to chat atm
+        stage.setScene(scene);
+        stage.show();
+
     }
 
     @FXML
@@ -137,16 +181,18 @@ public class ChatController {
             if (receiver.equals(username)) {
                 boolean found = false;
 
-                for (int i = 0; i < privateChatList.getSize(); i++)
-                    if (sender.equals(privateChatList.getUsers().get(i))){
-                        privateChatList.getChat(i).addMessage(sender, message);
+                for (int i = 0; i < pmChatSaved.size(); i++)
+                    if (sender.equals(pmChatSaved.get(i))){
+                        chatList.getChat(i).addMessage(sender, message);
                         found = true;
                     }
 
                 if (!found){
                     System.out.println("New Chat!");
                     Chat chat = new Chat();
-                    privateChatList.addChat(chat, sender);
+                    chatList.addChat(sender, chat);
+                    privateChatUsersList.add(new Pair<>(sender, chat));
+                    pmChatSaved.add(sender);
                     chat.addMessage(sender, message);
                 }
                 else {
@@ -175,4 +221,6 @@ public class ChatController {
         onlineUsers.clear();
         onlineUsers.addAll(users);
     }
+
+
 }
