@@ -46,8 +46,8 @@ public class PrivateChatController{
     public void updateUI(){
         try{
             observableListMessages.add(chatData.getMessage(chatData.getAmountMessage()-1));
-        }catch (Exception){
-
+        }catch (Exception e){
+            //Nothing happens. Workaround to don't trigger so much exception threads
         }
     }
 
