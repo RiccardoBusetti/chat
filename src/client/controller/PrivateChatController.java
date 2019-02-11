@@ -43,6 +43,14 @@ public class PrivateChatController{
         messageList.setCellFactory(param -> new MessageListCellView(sender));
     }
 
+    public void updateUI(){
+        try{
+            observableListMessages.add(chatData.getMessage(chatData.getAmountMessage()-1));
+        }catch (Exception){
+
+        }
+    }
+
     public String getSender() {
         return sender;
     }
@@ -73,6 +81,7 @@ public class PrivateChatController{
         PacketsEncoder packetsEncoder = new PacketsEncoder();
         client.sendLine(packetsEncoder.encode(new UnicastMessagePacket(sender, receiver, inputMessage.getText())));
         chatData.addMessage(sender, inputMessage.getText());
+        observableListMessages.add(new Pair<>(sender, inputMessage.getText()));
         inputMessage.clear();
     }
 

@@ -1,5 +1,6 @@
 package client.handlers;
 
+import client.controller.PrivateChatController;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 public class Chat {
 
     private List<Pair<String, String>> messages;
+    private PrivateChatController controller;
 
     public Chat(){
         messages = new ArrayList<>();
@@ -15,6 +17,19 @@ public class Chat {
 
     public void addMessage(String sender, String message){
         messages.add(new Pair<>(sender, message));
+    }
+
+    public void setController(PrivateChatController controller) {
+        this.controller = controller;
+    }
+
+    public void updateUI(){
+        try{
+            controller.updateUI();
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println("Something happened. Maybe it simply controller pointer got lost, lol");
+        }
     }
 
     public Pair<String, String> getMessage(int i){

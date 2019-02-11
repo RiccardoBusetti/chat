@@ -29,7 +29,6 @@ public class ChatController {
 
     private String username;
     private ClientSupporter client;
-    private ChatListV2 chatList;
 
     private ObservableList<Pair<String, String>> multicastMessageList;
     private ObservableList<String> onlineUsers;
@@ -46,9 +45,8 @@ public class ChatController {
     private ListView privateMessageList;
 
     public ChatController() {
-        chatList = ChatListV2.getInstance();
         multicastMessageList = FXCollections.observableArrayList(MessageList.getInstance().getAllMessages());
-        privateChatUsersList = FXCollections.observableArrayList(chatList.getAllChats());
+        privateChatUsersList = FXCollections.observableArrayList(ChatListV2.getInstance().getAllChats());
         pmChatSaved = FXCollections.observableArrayList();
         onlineUsers = FXCollections.observableArrayList();
     }
@@ -115,42 +113,47 @@ public class ChatController {
 
     @FXML
     private void openChat(MouseEvent mouseEvent) throws IOException {
-        String receiver = privateMessageList.getSelectionModel().getSelectedItem().toString();
+        try {
+            String receiver = privateMessageList.getSelectionModel().getSelectedItem().toString();
 
-        int location = 0;
-        boolean found = false;
-        for (int i = 0; i < pmChatSaved.size(); i++){
-            if (found)
-                continue;
-            if (pmChatSaved.get(i).equals(receiver)){
-                found = true;
-                location = i;
+            int location = 0;
+            boolean found = false;
+            for (int i = 0; i < pmChatSaved.size(); i++){
+                if (found)
+                    continue;
+                if (pmChatSaved.get(i).equals(receiver)){
+                    found = true;
+                    location = i;
+                }
             }
+
+            Chat data = privateChatUsersList.get(location).getValue();
+
+            //Open view
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PrivateChatApplication.fxml"));
+            Parent root = loader.load();
+
+            //Prepare scene
+            Scene scene = new Scene(root);
+            PrivateChatController controller = loader.getController();
+
+            //Controller settings
+            controller.setChatData(data);
+            controller.setSender(username);
+            controller.setReceiver(receiver);
+            controller.setClient(client);
+            controller.setUpUI();
+
+            data.setController(controller);
+
+            //Open stage
+            Stage stage = new Stage();
+            stage.setTitle(receiver); //Title is user to chat atm
+            stage.setScene(scene);
+            stage.show();
+        }catch (NullPointerException nuex){
+            System.out.println("Null pointer exception found");
         }
-
-        Chat data = privateChatUsersList.get(location).getValue();
-
-        //Open view
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PrivateChatApplication.fxml"));
-        Parent root = loader.load();
-
-        //Prepare scene
-        Scene scene = new Scene(root);
-        PrivateChatController controller = loader.getController();
-
-        //Controller settings
-        controller.setChatData(data);
-        controller.setSender(username);
-        controller.setReceiver(receiver);
-        controller.setClient(client);
-        controller.setUpUI();
-
-        //Open stage
-        Stage stage = new Stage();
-        stage.setTitle(receiver); //Title is user to chat atm
-        stage.setScene(scene);
-        stage.show();
-
     }
 
     @FXML
@@ -183,14 +186,16 @@ public class ChatController {
 
                 for (int i = 0; i < pmChatSaved.size(); i++)
                     if (sender.equals(pmChatSaved.get(i))){
-                        chatList.getChat(i).addMessage(sender, message);
+                        //chatList.getChat(i).addMessage(sender, message);
+                        privateChatUsersList.get(i).getValue().addMessage(sender, message);
+                        privateChatUsersList.get(i).getValue().updateUI();
                         found = true;
                     }
 
                 if (!found){
                     System.out.println("New Chat!");
                     Chat chat = new Chat();
-                    chatList.addChat(sender, chat);
+                    ChatListV2.getInstance().addChat(sender, chat);
                     privateChatUsersList.add(new Pair<>(sender, chat));
                     pmChatSaved.add(sender);
                     chat.addMessage(sender, message);

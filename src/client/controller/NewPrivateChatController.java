@@ -78,39 +78,46 @@ public class NewPrivateChatController {
     @FXML
     public void openNewChat(MouseEvent arg0) throws IOException {
 
-        String receiver = onlineNewUsers.getSelectionModel().getSelectedItem().toString();
+        try{
+            String receiver = onlineNewUsers.getSelectionModel().getSelectedItem().toString();
 
-        System.out.println("clicked on " + receiver);
+            System.out.println("clicked on " + receiver);
 
-        Chat chat = new Chat();
+            Chat chat = new Chat();
 
-        //Set chat on list
-        tempList.add(new Pair<>(receiver, chat));
-        pmList.add(receiver);
+            //Set chat on list
+            tempList.add(new Pair<>(receiver, chat));
+            pmList.add(receiver);
 
-        //Open view
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PrivateChatApplication.fxml"));
-        Parent root = loader.load();
+            //Open view
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PrivateChatApplication.fxml"));
+            Parent root = loader.load();
 
-        //Prepare scene
-        Scene scene = new Scene(root);
-        PrivateChatController controller = loader.getController();
+            //Prepare scene
+            Scene scene = new Scene(root);
+            PrivateChatController controller = loader.getController();
 
-        //Controller settings
-        controller.setChatData(chat);
-        controller.setSender(self);
-        controller.setReceiver(receiver);
-        controller.setClient(client);
-        controller.setUpUI();
+            //Controller settings
+            controller.setChatData(chat);
+            controller.setSender(self);
+            controller.setReceiver(receiver);
+            controller.setClient(client);
+            controller.setUpUI();
 
-        //Open stage
-        Stage stage = new Stage();
-        stage.setTitle(receiver); //Title is user to chat atm
-        stage.setScene(scene);
-        stage.show();
+            chat.setController(controller);
 
-        //Hide this view
-        this.hide();
+            //Open stage
+            Stage stage = new Stage();
+            stage.setTitle(receiver); //Title is user to chat atm
+            stage.setScene(scene);
+            stage.show();
+
+            //Hide this view
+            this.hide();
+        }catch (NullPointerException nuex){
+            System.out.println("Null pointer occurred");
+            return;
+        }
     }
 
     private void hide() {
