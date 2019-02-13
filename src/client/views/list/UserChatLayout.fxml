@@ -2,23 +2,21 @@
 
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="77.0" prefWidth="215.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:id="cell">
-   <children>
-      <ImageView fitHeight="55.0" fitWidth="60.0" layoutX="10.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+<AnchorPane fx:id="cell" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Text fx:id="receiverUsername" layoutX="83.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username" wrappingWidth="110.40159606933594">
+            <font>
+                <Font size="16.0" />
+            </font>
+        </Text>
+      <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="12.0" layoutY="13.0" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="16.0">
          <image>
-            <Image url="@../../assets/imageedit_7_6452441483.gif" />
+            <Image url="@../../assets/profile_pic.gif" />
          </image>
       </ImageView>
-      <Text fx:id="receiverUsername" layoutX="73.0" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="140.9859619140625">
-         <font>
-            <Font size="22.0" />
-         </font>
-      </Text>
-      <BorderPane layoutX="-1.0" layoutY="76.0" prefHeight="2.0" prefWidth="216.0" style="-fx-background-color: #e699ff;" />
-   </children>
+    </children>
 </AnchorPane>

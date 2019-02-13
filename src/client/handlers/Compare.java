@@ -1,15 +1,14 @@
 package client.handlers;
 
+import javafx.util.Pair;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javafx.util.Pair;
-
 public class Compare {
 
-    public static List<String> compare(Pair<String, Chat>[] arr, int n)
-    {
+    public static List<String> compare(Pair<String, Chat>[] arr, int n) {
         if (n == -1)
             n = arr.length;
 

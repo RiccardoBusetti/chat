@@ -6,7 +6,6 @@ import server.entities.packets.DispatchablePacket;
 import server.entities.packets.OnlineUsersPacket;
 import server.exceptions.UserNotFoundException;
 import server.logging.Logger;
-import server.packets.PacketsDispatcher;
 import server.packets.PacketsQueue;
 
 import java.io.IOException;

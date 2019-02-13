@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane depthTest="DISABLE" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="429.0" prefWidth="320.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.LoginController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" depthTest="DISABLE" maxHeight="-Infinity" maxWidth="-Infinity"
+            minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="429.0" prefWidth="320.0"
+            style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/8.0.171"
+            fx:controller="client.controller.LoginController">
     <children>
-        <Label layoutX="38.0" layoutY="42.0" prefHeight="30.0" prefWidth="88.0" text="LilChat" AnchorPane.leftAnchor="38.0" AnchorPane.topAnchor="42.0">
+        <Label layoutX="38.0" layoutY="42.0" prefHeight="30.0" prefWidth="88.0" text="LilChat"
+               AnchorPane.leftAnchor="38.0" AnchorPane.topAnchor="42.0">
             <font>
-                <Font name="System Bold" size="20.0" />
+                <Font name="System Bold" size="20.0"/>
             </font>
         </Label>
         <Label layoutX="37.0" layoutY="101.0" text="Username" textFill="#a2a2a2">
             <font>
-                <Font size="14.0" fx:id="x1" />
+                <Font size="14.0" fx:id="x1"/>
             </font>
         </Label>
-        <Label font="$x1" layoutX="37.0" layoutY="186.0" text="Password" textFill="#a1a1a1" />
-        <TextField fx:id="username" layoutX="37.0" layoutY="136.0" onKeyTyped="#makeOof" prefHeight="26.0" prefWidth="242.0" />
-        <Button layoutX="181.0" layoutY="332.0" mnemonicParsing="false" onAction="#makeSignIn" prefHeight="46.0" prefWidth="98.0" style="-fx-background-color: #6200EE;" text="Sign up" textFill="WHITE" />
-        <Button layoutX="40.0" layoutY="332.0" mnemonicParsing="false" onAction="#makeLogin" prefHeight="46.0" prefWidth="98.0" style="-fx-background-color: #6200EE;" text="Log in" textFill="WHITE" />
-        <PasswordField fx:id="password" layoutX="37.0" layoutY="211.0" onKeyReleased="#checkEnterButton" onKeyTyped="#makeOof" prefHeight="25.0" prefWidth="242.0" />
-      <TextField layoutX="39.0" layoutY="284.0" prefHeight="25.0" prefWidth="236.0" />
-      <Label layoutX="39.0" layoutY="258.0" prefHeight="20.0" prefWidth="112.0" text="Server address" textFill="#a1a1a1">
-         <font>
-            <Font size="14.0" fx:id="x12" />
-         </font>
-      </Label>
+        <Label font="$x1" layoutX="37.0" layoutY="186.0" text="Password" textFill="#a1a1a1"/>
+        <TextField fx:id="username" layoutX="37.0" layoutY="136.0" onKeyTyped="#makeOof" prefHeight="26.0"
+                   prefWidth="242.0"/>
+        <Button layoutX="181.0" layoutY="332.0" mnemonicParsing="false" onAction="#makeSignIn" prefHeight="46.0"
+                prefWidth="98.0" style="-fx-background-color: #6200EE;" text="Sign up" textFill="WHITE"/>
+        <Button layoutX="40.0" layoutY="332.0" mnemonicParsing="false" onAction="#makeLogin" prefHeight="46.0"
+                prefWidth="98.0" style="-fx-background-color: #6200EE;" text="Log in" textFill="WHITE"/>
+        <PasswordField fx:id="password" layoutX="37.0" layoutY="211.0" onKeyReleased="#checkEnterButton"
+                       onKeyTyped="#makeOof" prefHeight="25.0" prefWidth="242.0"/>
+        <TextField layoutX="39.0" layoutY="284.0" prefHeight="25.0" prefWidth="236.0"/>
+        <Label layoutX="39.0" layoutY="258.0" prefHeight="20.0" prefWidth="112.0" text="Server address"
+               textFill="#a1a1a1">
+            <font>
+                <Font size="14.0" fx:id="x12"/>
+            </font>
+        </Label>
     </children>
 </AnchorPane>

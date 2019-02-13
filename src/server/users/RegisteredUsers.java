@@ -163,7 +163,7 @@ public class RegisteredUsers extends ServiceUsers<User, Boolean> {
      * the entire file. As in the previous method we need to improve
      * the algorithm if the system userbase will scale.
      *
-     * @param username username of the user we will update the status.
+     * @param username  username of the user we will update the status.
      * @param isBlocked true if we will block the user and false otherwise.
      * @throws UserNotFoundException thrown if the user is not existing.
      */

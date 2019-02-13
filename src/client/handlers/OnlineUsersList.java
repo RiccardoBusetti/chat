@@ -6,6 +6,11 @@ import java.util.List;
 public class OnlineUsersList {
 
     private static OnlineUsersList instance;
+    private List<String> users;
+
+    public OnlineUsersList() {
+        this.users = new ArrayList<>();
+    }
 
     public static OnlineUsersList getInstance() {
         if (instance == null) instance = new OnlineUsersList();
@@ -13,21 +18,15 @@ public class OnlineUsersList {
         return instance;
     }
 
-    private List<String> users;
-
-    public OnlineUsersList(){
-        this.users = new ArrayList<>();
-    }
-
-    public void add(String in){
+    public void add(String in) {
         this.users.add(in);
     }
 
-    public void clear(){
+    public void clear() {
         this.users.clear();
     }
 
-    public List<String> getAllUsers(){
+    public List<String> getAllUsers() {
         return users;
     }
 

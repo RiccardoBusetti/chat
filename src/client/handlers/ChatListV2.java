@@ -10,7 +10,7 @@ public class ChatListV2 {
 
     private List<Pair<String, Chat>> chats;
 
-    public ChatListV2(){
+    public ChatListV2() {
         chats = new ArrayList<>();
     }
 
@@ -20,27 +20,27 @@ public class ChatListV2 {
         return instance;
     }
 
-    public void addChat(String user, Chat chat){
+    public void addChat(String user, Chat chat) {
         chats.add(new Pair<>(user, chat));
     }
 
-    public List<Pair<String, Chat>> getAllChats(){
+    public List<Pair<String, Chat>> getAllChats() {
         return chats;
     }
 
-    public Pair<String, Chat> getFullChat(int i){
+    public Pair<String, Chat> getFullChat(int i) {
         return chats.get(i);
     }
 
-    public String getChatUser(int i){
+    public String getChatUser(int i) {
         return chats.get(i).getKey();
     }
 
-    public Chat getChat(int i){
+    public Chat getChat(int i) {
         return chats.get(i).getValue();
     }
 
-    public int size(){
+    public int size() {
         return chats.size();
     }
 }

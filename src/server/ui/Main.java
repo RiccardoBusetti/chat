@@ -8,10 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import server.MessagingService;
 
-import java.awt.*;
 import java.io.IOException;
-
-import static com.sun.org.apache.xerces.internal.utils.SecuritySupport.getResourceAsStream;
 
 public class Main extends Application {
 

@@ -17,7 +17,7 @@ public interface Users<U, I> {
     /**
      * Adds a user.
      *
-     * @param user entity representing the user.
+     * @param user        entity representing the user.
      * @param information entity representing other information for the user.
      */
     void addUser(U user, I information);

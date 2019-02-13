@@ -2,7 +2,8 @@ package client.handlers;
 
 import javafx.util.Pair;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MessageList {
 
@@ -10,7 +11,7 @@ public class MessageList {
 
     private List<Pair<String, String>> messages;
 
-    public MessageList(){
+    public MessageList() {
         messages = new ArrayList<>();
     }
 
@@ -20,11 +21,11 @@ public class MessageList {
         return instance;
     }
 
-    public void addMessage(String user, String message){
+    public void addMessage(String user, String message) {
         messages.add(new Pair<>(user, message));
     }
 
-    public List<Pair<String, String>> getAllMessages(){
+    public List<Pair<String, String>> getAllMessages() {
         return messages;
     }
 

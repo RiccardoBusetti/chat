@@ -23,7 +23,7 @@ public class ClientSupporter {
         this.createConnection();
     }
 
-    public ClientSupporter(){
+    public ClientSupporter() {
 
     }
 

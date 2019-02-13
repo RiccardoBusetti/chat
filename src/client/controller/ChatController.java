@@ -6,6 +6,7 @@ import client.cellviews.UserListCellView;
 import client.handlers.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,8 +14,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -39,6 +40,8 @@ public class ChatController {
     private ObservableList<String> pmChatSaved;
 
     @FXML
+    private Label loggedInUsername;
+    @FXML
     private TextField messageText;
     @FXML
     private Button sendButton;
@@ -54,12 +57,7 @@ public class ChatController {
         onlineUsers = FXCollections.observableArrayList();
     }
 
-    @FXML
-    public void initialize() {
-        setUpUI();
-    }
-
-    public void stop(){
+    public void stop() {
         System.out.println("Stage is closing");
     }
 
@@ -99,16 +97,23 @@ public class ChatController {
     }
 
     private void setUpUI() {
+        multicastList.setStyle("-fx-control-inner-background-alt: -fx-control-inner-background");
         multicastList.setItems(multicastMessageList);
-        multicastList.setMouseTransparent(true);
-        multicastList.setFocusTraversable(false);
         multicastList.setCellFactory(param -> new MessageListCellView(username));
+        multicastList.getItems().addListener((ListChangeListener) c -> {
+            multicastList.scrollTo(multicastList.getItems().size() - 1);
+        });
+
+        privateMessageList.setStyle("-fx-control-inner-background-alt: -fx-control-inner-background");
         privateMessageList.setItems(pmChatSaved);
         privateMessageList.setCellFactory(param -> new UserListCellView(client, username));
+
+        loggedInUsername.setText("Logged in as " + username);
+
         addListeners();
     }
 
-    private void updateOnlineUserUI(List<String> in){
+    private void updateOnlineUserUI(List<String> in) {
         pmChatSaved.clear();
         for (String s : in) pmChatSaved.add(s);
     }
@@ -124,16 +129,16 @@ public class ChatController {
     }
 
     @FXML
-    private void openChat(MouseEvent mouseEvent) throws IOException{
+    private void openChat(MouseEvent mouseEvent) throws IOException {
         try {
             String receiver = privateMessageList.getSelectionModel().getSelectedItem().toString();
 
             int location = 0;
             boolean found = false;
-            for (int i = 0; i < pmChatSaved.size(); i++){
+            for (int i = 0; i < pmChatSaved.size(); i++) {
                 if (found)
                     continue;
-                if (pmChatSaved.get(i).equals(receiver)){
+                if (pmChatSaved.get(i).equals(receiver)) {
                     found = true;
                     location = i;
                 }
@@ -164,7 +169,7 @@ public class ChatController {
             stage.getIcons().add(new Image(Main.class.getResourceAsStream("../client/assets/icon.png")));
             stage.setScene(scene);
             stage.show();
-        }catch (NullPointerException nuex){
+        } catch (NullPointerException nuex) {
             System.out.println("Null pointer exception found");
         }
     }
@@ -172,13 +177,12 @@ public class ChatController {
     @FXML
     private void sendMulticastMessage() {
 
-        if (messageText.getText().replace("\n", "").length() == 0)
-        {
+        if (messageText.getText().replace("\n", "").length() == 0) {
             messageText.clear();
             return;
         }
 
-        String message = messageText.getText().replace("\n"," \b");
+        String message = messageText.getText().replace("\n", " \b");
         PacketsEncoder packetsEncoder = new PacketsEncoder();
         MulticastMessagePacket multicastMessagePacket = new MulticastMessagePacket(this.username, message);
 
@@ -198,7 +202,7 @@ public class ChatController {
                 boolean found = false;
 
                 for (int i = 0; i < pmChatSaved.size(); i++)
-                    if (sender.equals(pmChatSaved.get(i))){
+                    if (sender.equals(pmChatSaved.get(i))) {
                         //
                         //chatList.getChat(i).addMessage(sender, message);
                         privateChatUsersList.get(i).getValue().addMessage(sender, message);
@@ -206,20 +210,19 @@ public class ChatController {
                         found = true;
                     }
 
-                if (!found){
+                if (!found) {
                     System.out.println("New Chat!");
                     Chat chat = new Chat();
                     ChatListV2.getInstance().addChat(sender, chat);
                     privateChatUsersList.add(new Pair<>(sender, chat));
                     pmChatSaved.add(sender);
                     chat.addMessage(sender, message);
-                }
-                else {
+                } else {
                     System.out.println("New message!");
                 }
 
                 //updateOnlineUserUI(Compare.compare(temp, -1));
-            }else {
+            } else {
                 System.out.println("Unicast ignored due to not matching username");
             }
 
@@ -232,6 +235,7 @@ public class ChatController {
 
     public void setUsername(String username) {
         this.username = username;
+        setUpUI();
     }
 
     public void setClient(ClientSupporter client) {

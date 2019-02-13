@@ -10,7 +10,7 @@ public class ChatList {
     private List<Chat> chatList;
     private List<String> receivers;
 
-    public ChatList(){
+    public ChatList() {
         chatList = new ArrayList<>();
         receivers = new ArrayList<>();
     }
@@ -21,21 +21,21 @@ public class ChatList {
         return instance;
     }
 
-    public void addChat(String user){
+    public void addChat(String user) {
         chatList.add(new Chat());
         receivers.add(user);
     }
 
-    public void addChat(Chat chat, String user){
+    public void addChat(Chat chat, String user) {
         chatList.add(chat);
         receivers.add(user);
     }
 
-    public List<String> getUsers(){
+    public List<String> getUsers() {
         return receivers;
     }
 
-    public Chat getChat(int i){
+    public Chat getChat(int i) {
         return chatList.get(i);
     }
 

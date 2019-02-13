@@ -1,7 +1,9 @@
 package client.controller;
 
 import client.Main;
-import client.handlers.*;
+import client.handlers.Chat;
+import client.handlers.ClientSupporter;
+import client.handlers.OnlineUsersList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import server.users.OnlineUsers;
 
 import java.io.IOException;
 import java.util.List;
@@ -38,25 +39,26 @@ public class NewPrivateChatController {
         //onlineNewUsers.setItems(onlineUsers);
     }
 
-    public void setUpUI(){
+    public void setUpUI() {
         //onlineUsers = FXCollections.observableArrayList(OnlineUsersList.getInstance().getAllUsers());
         //assert onlineNewUsers != null;
+        onlineNewUsers.setStyle("-fx-control-inner-background-alt: -fx-control-inner-background");
         onlineNewUsers.setItems(onlineUsers);
     }
 
-    public void setTempList(ObservableList<Pair<String, Chat>> input){
+    public void setTempList(ObservableList<Pair<String, Chat>> input) {
         tempList = input;
     }
 
-    public void setClient(ClientSupporter client){
+    public void setClient(ClientSupporter client) {
         this.client = client;
     }
 
-    public void setStage(Stage stage){
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
 
-    public void setUpList(List<String> online, List<String> user_in_pm, String self){
+    public void setUpList(List<String> online, List<String> user_in_pm, String self) {
         boolean found;
         for (String s : online) {
             found = false;
@@ -79,7 +81,7 @@ public class NewPrivateChatController {
     @FXML
     public void openNewChat(MouseEvent arg0) throws IOException {
 
-        try{
+        try {
             String receiver = onlineNewUsers.getSelectionModel().getSelectedItem().toString();
 
             System.out.println("clicked on " + receiver);
@@ -109,14 +111,14 @@ public class NewPrivateChatController {
 
             //Open stage
             Stage stage = new Stage();
-            stage.setTitle("LilChat - Chatting w/" + receiver);
+            stage.setTitle("LilChat - Chat with " + receiver);
             stage.getIcons().add(new Image(Main.class.getResourceAsStream("../client/assets/icon.png")));
             stage.setScene(scene);
             stage.show();
 
             //Hide this view
             this.hide();
-        }catch (NullPointerException nuex){
+        } catch (NullPointerException nuex) {
             System.out.println("Null pointer occurred");
             return;
         }
