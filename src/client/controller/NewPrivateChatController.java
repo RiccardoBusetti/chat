@@ -1,6 +1,7 @@
 package client.controller;
 
 import client.Main;
+import client.cellviews.OnlineUserListCellView;
 import client.handlers.Chat;
 import client.handlers.ClientSupporter;
 import client.handlers.OnlineUsersList;
@@ -44,6 +45,7 @@ public class NewPrivateChatController {
         //assert onlineNewUsers != null;
         onlineNewUsers.setStyle("-fx-control-inner-background-alt: -fx-control-inner-background");
         onlineNewUsers.setItems(onlineUsers);
+        onlineNewUsers.setCellFactory(param -> new OnlineUserListCellView());
     }
 
     public void setTempList(ObservableList<Pair<String, Chat>> input) {
