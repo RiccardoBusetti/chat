@@ -30,6 +30,7 @@ import server.packets.PacketsDecoder;
 import server.packets.PacketsEncoder;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -66,7 +67,7 @@ public class LoginController implements Initializable {
         String host = hostname.getText();
 
         try {
-            client = new ClientSupporter(host, Constants.SERVER_PORT);
+            client = new ClientSupporter(host != null ? host : InetAddress.getLocalHost().toString(), Constants.SERVER_PORT);
         } catch (Exception e) {
             Dialogs.showErrorDialog("Connection error", "Cannot connect to the server");
             return;
