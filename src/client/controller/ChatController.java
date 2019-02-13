@@ -101,6 +101,11 @@ public class ChatController {
         addListeners();
     }
 
+    private void updateOnlineUserUI(List<String> in){
+        pmChatSaved.clear();
+        for (String s : in) pmChatSaved.add(s);
+    }
+
     private void addListeners() {
         messageText.setOnKeyPressed(this::checkEnterKey);
     }
@@ -112,7 +117,7 @@ public class ChatController {
     }
 
     @FXML
-    private void openChat(MouseEvent mouseEvent) throws IOException {
+    private void openChat(MouseEvent mouseEvent) throws IOException{
         try {
             String receiver = privateMessageList.getSelectionModel().getSelectedItem().toString();
 
@@ -203,6 +208,13 @@ public class ChatController {
                 else {
                     System.out.println("New message!");
                 }
+
+                Pair[] temp = new Pair[privateChatUsersList.size()];
+
+                for (int i = 0; i < temp.length; i++)
+                    temp[i] = privateChatUsersList.get(i);
+
+                //updateOnlineUserUI(Compare.compare(temp, -1));
             }else {
                 System.out.println("Unicast ignored due to not matching username");
             }
@@ -226,6 +238,5 @@ public class ChatController {
         onlineUsers.clear();
         onlineUsers.addAll(users);
     }
-
 
 }

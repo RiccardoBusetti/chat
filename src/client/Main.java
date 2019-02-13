@@ -4,10 +4,12 @@ import client.controller.LoginController;
 import client.handlers.ClientSupporter;
 import client.handlers.Dialogs;
 import client.handlers.Sound;
+import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import server.constants.Constants;
 
@@ -37,6 +39,7 @@ public class Main extends Application {
 
         Stage stage = new Stage();
         stage.setTitle("");
+        stage.getIcons().add(new Image(Constants.LILICON));
         stage.setScene(scene);
         rc.setStage(stage);
         stage.show();

@@ -10,13 +10,16 @@ public class Chat {
 
     private List<Pair<String, String>> messages;
     private PrivateChatController controller;
+    private long latestMessageTimestamp;
 
     public Chat(){
         messages = new ArrayList<>();
+        latestMessageTimestamp = System.currentTimeMillis();
     }
 
     public void addMessage(String sender, String message){
         messages.add(new Pair<>(sender, message));
+        latestMessageTimestamp = System.currentTimeMillis();
     }
 
     public void setController(PrivateChatController controller) {
@@ -42,6 +45,10 @@ public class Chat {
 
     public List<Pair<String, String>> getMessages(){
         return messages;
+    }
+
+    public long getLatestMessageTimestamp(){
+        return latestMessageTimestamp;
     }
 
 }
