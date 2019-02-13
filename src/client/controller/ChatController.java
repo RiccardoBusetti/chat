@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -77,7 +78,8 @@ public class ChatController {
         controller.setPmList(pmChatSaved);
 
         Stage stage = new Stage();
-        stage.setTitle("New Chat...");
+        stage.setTitle("LilChat - New Chat...");
+        stage.getIcons().add(new Image(Main.class.getResourceAsStream("../client/assets/icon.png")));
         stage.setScene(scene);
 
         controller.setStage(stage);
@@ -140,7 +142,7 @@ public class ChatController {
             Chat data = privateChatUsersList.get(location).getValue();
 
             //Open view
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PrivateChatApplication.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PrivateChatApplicationV2.fxml"));
             Parent root = loader.load();
 
             //Prepare scene
@@ -158,7 +160,8 @@ public class ChatController {
 
             //Open stage
             Stage stage = new Stage();
-            stage.setTitle(receiver); //Title is user to chat atm
+            stage.setTitle("LilChat - Chatting w/" + receiver); //Title is user to chat atm
+            stage.getIcons().add(new Image(Main.class.getResourceAsStream("../client/assets/icon.png")));
             stage.setScene(scene);
             stage.show();
         }catch (NullPointerException nuex){

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="626.0" prefWidth="825.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.controller.PrivateChatController">
+   <children>
+      <BorderPane layoutX="209.0" layoutY="566.6" prefHeight="2.0" prefWidth="739.0" style="-fx-background-color: #6200ee;" AnchorPane.bottomAnchor="57.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <ImageView fx:id="sendButton" fitHeight="35.0" fitWidth="35.0" layoutX="903.0" layoutY="582.0" onMouseClicked="#sendUnicastMessage" pickOnBounds="true" preserveRatio="true" rotate="90.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+         <image>
+            <Image url="@./../assets/send.png" />
+         </image>
+      </ImageView>
+      <ListView fx:id="messageList" layoutX="317.0" prefHeight="567.0" prefWidth="825.0" AnchorPane.bottomAnchor="59.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <TextField fx:id="inputMessage" layoutX="218.0" layoutY="586.8" onKeyReleased="#checkIfEnter" prefHeight="25.0" prefWidth="664.0" AnchorPane.bottomAnchor="13.600000000000023" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="66.0" />
+   </children>
+</AnchorPane>

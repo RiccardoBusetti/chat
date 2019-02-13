@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -90,7 +91,7 @@ public class NewPrivateChatController {
             pmList.add(receiver);
 
             //Open view
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PrivateChatApplication.fxml"));
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/PrivateChatApplicationV2.fxml"));
             Parent root = loader.load();
 
             //Prepare scene
@@ -108,7 +109,8 @@ public class NewPrivateChatController {
 
             //Open stage
             Stage stage = new Stage();
-            stage.setTitle(receiver); //Title is user to chat atm
+            stage.setTitle("LilChat - Chatting w/" + receiver);
+            stage.getIcons().add(new Image(Main.class.getResourceAsStream("../client/assets/icon.png")));
             stage.setScene(scene);
             stage.show();
 
