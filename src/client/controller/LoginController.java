@@ -67,7 +67,7 @@ public class LoginController implements Initializable {
         String host = hostname.getText();
 
         try {
-            client = new ClientSupporter(host != null ? host : InetAddress.getLocalHost().toString(), Constants.SERVER_PORT);
+            client = new ClientSupporter(host != null && !host.equals("") ? host : InetAddress.getLocalHost().toString(), Constants.SERVER_PORT);
         } catch (Exception e) {
             Dialogs.showErrorDialog("Connection error", "Cannot connect to the server");
             return;
