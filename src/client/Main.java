@@ -21,21 +21,13 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/LoginApplication.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/LoginApplicationV2.fxml"));
         Parent root = loader.load();
-        ClientSupporter client = null;
-        try {
-            client = new ClientSupporter(Constants.SERVER_HOST, Constants.SERVER_PORT);
-        } catch (Exception e) {
-            Dialogs.showErrorDialog("Connection error", "Cannot connect to the server");
-            System.exit(1);
-        }
 
         //Parent root = FXMLLoader.load(SampleApplication.class.getResource("views/ChatApplication.fxml"));
         Scene scene = new Scene(root);
         LoginController rc = loader.getController();
-        rc.setClient(client);
+        rc.setClient(new ClientSupporter());
 
         Stage stage = new Stage();
         stage.setTitle("LilChat versione aDRIAN LA SERIE EVENTO");

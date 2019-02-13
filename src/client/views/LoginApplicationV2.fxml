@@ -24,7 +24,7 @@
         <Button layoutX="181.0" layoutY="332.0" mnemonicParsing="false" onAction="#makeSignIn" prefHeight="46.0" prefWidth="98.0" style="-fx-background-color: #6200EE;" text="Sign up" textFill="WHITE" />
         <Button layoutX="40.0" layoutY="332.0" mnemonicParsing="false" onAction="#makeLogin" prefHeight="46.0" prefWidth="98.0" style="-fx-background-color: #6200EE;" text="Log in" textFill="WHITE" />
         <PasswordField fx:id="password" layoutX="37.0" layoutY="211.0" onKeyReleased="#checkEnterButton" onKeyTyped="#makeOof" prefHeight="25.0" prefWidth="242.0" />
-      <TextField layoutX="39.0" layoutY="284.0" prefHeight="25.0" prefWidth="236.0" text="localhost" />
+      <TextField layoutX="39.0" layoutY="284.0" prefHeight="25.0" prefWidth="236.0" text="localhost" fx:id="hostname"/>
       <Label layoutX="39.0" layoutY="258.0" prefHeight="20.0" prefWidth="112.0" text="Server address" textFill="#a1a1a1">
          <font>
             <Font size="14.0" fx:id="x12" />

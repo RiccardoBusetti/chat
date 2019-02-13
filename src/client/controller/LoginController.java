@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import server.constants.Constants;
 import server.entities.packets.AccessPacket;
 import server.entities.packets.AccessResultPacket;
 import server.entities.packets.ErrorPacket;
@@ -40,7 +41,7 @@ import java.util.ResourceBundle;
 public class LoginController implements Initializable {
 
     @FXML
-    private TextField username, password;
+    private TextField username, password, hostname;
 
     @FXML
     private Pane root;
@@ -62,6 +63,14 @@ public class LoginController implements Initializable {
 
         String user = username.getText();
         String pass = password.getText();
+        String host = hostname.getText();
+
+        try {
+            client = new ClientSupporter(host, Constants.SERVER_PORT);
+        } catch (Exception e) {
+            Dialogs.showErrorDialog("Connection error", "Cannot connect to the server");
+            return;
+        }
 
         if (user.equals("") || pass.equals("")) {
             String message = "";
@@ -114,6 +123,14 @@ public class LoginController implements Initializable {
 
         String user = username.getText();
         String pass = password.getText();
+        String host = hostname.getText();
+
+        try {
+            client = new ClientSupporter(host, Constants.SERVER_PORT);
+        } catch (Exception e) {
+            Dialogs.showErrorDialog("Connection error", "Cannot connect to the server");
+            return;
+        }
 
         if (user.equals("") || pass.equals("")) {
             String message = "";
