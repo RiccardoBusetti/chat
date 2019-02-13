@@ -23,6 +23,10 @@ public class ClientSupporter {
         this.createConnection();
     }
 
+    public ClientSupporter(){
+
+    }
+
     public String getHost() {
         return host;
     }

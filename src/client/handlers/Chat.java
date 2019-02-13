@@ -9,6 +9,7 @@ import java.util.List;
 public class Chat {
 
     private List<Pair<String, String>> messages;
+    private String sender, receiver;
     private PrivateChatController controller;
     private long latestMessageTimestamp;
 
@@ -34,6 +35,8 @@ public class Chat {
             System.out.println("Something happened. Maybe it simply controller pointer got lost, lol");
         }
     }
+
+
 
     public Pair<String, String> getMessage(int i){
         return messages.get(i);

@@ -2,6 +2,7 @@ package client.controller;
 
 import client.Main;
 import client.cellviews.MessageListCellView;
+import client.cellviews.UserListCellView;
 import client.handlers.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -14,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -36,7 +38,7 @@ public class ChatController {
     private ObservableList<String> pmChatSaved;
 
     @FXML
-    private TextArea messageText;
+    private TextField messageText;
     @FXML
     private Button sendButton;
     @FXML
@@ -61,7 +63,7 @@ public class ChatController {
     }
 
     @FXML
-    public void openFormNewPrivateMessage(ActionEvent event) throws IOException {
+    public void openFormNewPrivateMessage(MouseEvent mouseEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/NewPrivateChatApplication.fxml"));
         Parent root = loader.load();
 
@@ -98,6 +100,7 @@ public class ChatController {
         multicastList.setItems(multicastMessageList);
         multicastList.setCellFactory(param -> new MessageListCellView(username));
         privateMessageList.setItems(pmChatSaved);
+        privateMessageList.setCellFactory(param -> new UserListCellView(client, username));
         addListeners();
     }
 
@@ -191,6 +194,7 @@ public class ChatController {
 
                 for (int i = 0; i < pmChatSaved.size(); i++)
                     if (sender.equals(pmChatSaved.get(i))){
+                        //
                         //chatList.getChat(i).addMessage(sender, message);
                         privateChatUsersList.get(i).getValue().addMessage(sender, message);
                         privateChatUsersList.get(i).getValue().updateUI();
@@ -208,11 +212,6 @@ public class ChatController {
                 else {
                     System.out.println("New message!");
                 }
-
-                Pair[] temp = new Pair[privateChatUsersList.size()];
-
-                for (int i = 0; i < temp.length; i++)
-                    temp[i] = privateChatUsersList.get(i);
 
                 //updateOnlineUserUI(Compare.compare(temp, -1));
             }else {

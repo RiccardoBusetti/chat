@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
@@ -39,15 +40,11 @@ import java.util.ResourceBundle;
 public class LoginController implements Initializable {
 
     @FXML
-    private Label label;
-
-    @FXML
     private TextField username, password;
 
     @FXML
     private Pane root;
 
-    private Media oof;
     private ClientSupporter client;
     private Stage stage;
 
@@ -60,21 +57,6 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
 
     }
-
-
-    private boolean connectForLogin(String username, String password) {
-        boolean result = false;
-
-        return result;
-    }
-
-
-    private boolean connectForSignin(String username, String password) {
-        boolean result = false;
-
-        return result;
-    }
-
 
     public void makeLogin(ActionEvent event) {
 
@@ -117,7 +99,6 @@ public class LoginController implements Initializable {
             if (!accessResultPacket1.isAllowed()) {
                 Dialogs.showErrorDialog("Can't do the login", "Wrong credentials");
             } else {
-                Dialogs.showInfoHeadlessDialog("Login made successfully");
                 try {
                     gotoChat(user);
                 } catch (IOException e) {
@@ -187,7 +168,7 @@ public class LoginController implements Initializable {
 
     private void gotoChat(String username) throws IOException {
 
-        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/ChatApplication.fxml"));
+        FXMLLoader loader = new FXMLLoader(Main.class.getResource("views/ChatApplicationV2.fxml"));
         Parent root = loader.load();
 
         //Parent root = FXMLLoader.load(SampleApplication.class.getResource("views/ChatApplication.fxml"));
@@ -199,8 +180,9 @@ public class LoginController implements Initializable {
         Sound.playBoot();
 
         Stage stage = new Stage();
-        stage.setTitle("");
+        stage.setTitle("LilChat");
         stage.setScene(scene);
+        stage.getIcons().add(new Image(LoginController.class.getResourceAsStream("../../client/assets/icon.png")));
         this.stage.hide();
         stage.show();
         ClientReader clientReader = new ClientReader(client, rc);
