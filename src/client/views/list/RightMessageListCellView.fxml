@@ -2,10 +2,23 @@
 
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.201" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label fx:id="messageText" layoutX="451.0" layoutY="27.0" text="Label" textFill="#000000cc" AnchorPane.rightAnchor="16.0" />
-      <Label fx:id="senderUsername" layoutX="451.0" layoutY="6.0" text="Label" AnchorPane.rightAnchor="16.0" />
+      <AnchorPane layoutX="19.0" layoutY="11.0" style="-fx-background-radius: 20; -fx-background-color: #BB86FC;" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="16.0">
+         <children>
+            <Label fx:id="messageText" layoutX="14.0" layoutY="16.0" text="Label" textFill="WHITE" AnchorPane.bottomAnchor="16.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="32.0">
+               <font>
+                  <Font name="System Font" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="senderUsername" layoutX="16.0" layoutY="6.0" text="Label" textFill="#ffffffcc" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="8.0">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
    </children>
 </AnchorPane>

@@ -98,6 +98,8 @@ public class ChatController {
 
     private void setUpUI() {
         multicastList.setItems(multicastMessageList);
+        multicastList.setMouseTransparent(true);
+        multicastList.setFocusTraversable(false);
         multicastList.setCellFactory(param -> new MessageListCellView(username));
         privateMessageList.setItems(pmChatSaved);
         privateMessageList.setCellFactory(param -> new UserListCellView(client, username));
