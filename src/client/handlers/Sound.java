@@ -57,11 +57,19 @@ public class Sound {
     }
 
     public static void playOof() {
-        play("", 2);
+        try {
+            play("", 2);
+        } catch (Exception exc) {
+            System.out.println("Cannot play sound");
+        }
     }
 
     public static void playBoot() {
-        play("", 3);
+        try {
+            play("", 3);
+        } catch (Exception exc) {
+            System.out.println("Cannot play sound");
+        }
     }
 
 }
