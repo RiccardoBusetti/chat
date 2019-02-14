@@ -114,6 +114,7 @@ public class NewPrivateChatController {
             //Open stage
             Stage stage = new Stage();
             stage.setTitle("LilChat - Chat with " + receiver);
+            stage.setResizable(false);
             stage.getIcons().add(new Image(Main.class.getResourceAsStream("../client/assets/icon.png")));
             stage.setScene(scene);
             stage.show();

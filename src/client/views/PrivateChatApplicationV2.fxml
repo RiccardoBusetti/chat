@@ -14,10 +14,10 @@
                     style="-fx-background-color: #6200ee;" AnchorPane.bottomAnchor="57.0" AnchorPane.leftAnchor="0.0"
                     AnchorPane.rightAnchor="0.0"/>
         <ImageView fx:id="sendButton" fitHeight="35.0" fitWidth="35.0" layoutX="903.0" layoutY="582.0"
-                   onMouseClicked="#sendUnicastMessage" pickOnBounds="true" preserveRatio="true" rotate="90.0"
+                   onMouseClicked="#sendUnicastMessage" pickOnBounds="true" preserveRatio="true"
                    AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
             <image>
-                <Image url="@./../assets/send.png"/>
+                <Image url="@./../assets/send_icon.png"/>
             </image>
         </ImageView>
         <ListView fx:id="messageList" layoutX="317.0" prefHeight="567.0" prefWidth="825.0"

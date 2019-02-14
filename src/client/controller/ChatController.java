@@ -76,7 +76,8 @@ public class ChatController {
         controller.setPmList(pmChatSaved);
 
         Stage stage = new Stage();
-        stage.setTitle("LilChat - New Chat...");
+        stage.setTitle("LilChat - Start a new chat");
+        stage.setResizable(false);
         stage.getIcons().add(new Image(Main.class.getResourceAsStream("../client/assets/icon.png")));
         stage.setScene(scene);
 
@@ -165,7 +166,8 @@ public class ChatController {
 
             //Open stage
             Stage stage = new Stage();
-            stage.setTitle("LilChat - Chatting w/" + receiver); //Title is user to chat atm
+            stage.setTitle("LilChat - Chat with " + receiver);
+            stage.setResizable(false);
             stage.getIcons().add(new Image(Main.class.getResourceAsStream("../client/assets/icon.png")));
             stage.setScene(scene);
             stage.show();

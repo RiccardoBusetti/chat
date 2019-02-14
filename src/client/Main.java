@@ -26,6 +26,7 @@ public class Main extends Application {
 
         Stage stage = new Stage();
         stage.setTitle("LilChat");
+        stage.setResizable(false);
         stage.getIcons().add(new Image(Main.class.getResourceAsStream("../client/assets/icon.png")));
         stage.setScene(scene);
         rc.setStage(stage);

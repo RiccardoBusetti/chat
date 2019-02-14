@@ -197,6 +197,7 @@ public class LoginController implements Initializable {
 
         Stage stage = new Stage();
         stage.setTitle("LilChat");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.getIcons().add(new Image(LoginController.class.getResourceAsStream("../../client/assets/icon.png")));
         this.stage.hide();

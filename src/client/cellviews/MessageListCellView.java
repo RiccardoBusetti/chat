@@ -4,7 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.util.Pair;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class MessageListCellView extends ListCell<Pair<String, String>> {
 
                 FXMLLoader loader = new FXMLLoader(MessageListCellView.class.getResource(location));
                 loader.setController(this);
-                AnchorPane rootCellLayout = loader.load();
+                BorderPane rootCellLayout = loader.load();
 
                 senderUsername.setText(item.getKey());
                 messageText.setText(item.getValue());
